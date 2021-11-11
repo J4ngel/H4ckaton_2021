@@ -26,5 +26,9 @@ def recuperar():
 def registrarse():
     return render_template('registrarse.html')
 
+@app.route('/registro/empleado')
+def registro_empleado():
+    return render_template('registro_empleado.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
