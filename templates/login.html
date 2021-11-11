@@ -1,0 +1,53 @@
+{%  extends "constantes.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block espacios %}
+<br><br><br>
+{% endblock %}
+
+{% block desarrollo %}
+    <div class="col"></div>
+
+    <div class="col-4">
+        <form class="align-items-center">
+            <div class="mb-3 text-center">
+                <img src="{{url_for('static',filename='img/user.png')}}" alt="User" width="200px" height="200px">
+            </div>
+
+            <div class="mb-3">
+                <label for="exampleInputEmail1" class="form-label">Cedula</label>
+                <input type="text" class="form-control" placeholder="Digite unicamente números" id="exampleInputEmail1" aria-describedby="emailHelp">
+                <div id="emailHelp" class="form-text">No compartiremos tu cedula con nadie mas</div>
+            </div>
+            <div class="mb-3">
+                <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="exampleInputPassword1">
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <button type="button" class="btn btn-primary">Registrarse</button>
+            </div>
+
+            <div class="accordion accordion-flush" id="recuperar_info">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Recuperar información
+                      </button>
+                    </h2>
+                    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+                        <input type="text" class="form-control" placeholder="Digite su nombre completo" id="name">
+                        <input type="text" class="form-control" placeholder="Digite la fecha de nacimiento ej: 23/08/1998" id="date">
+                        <input type="text" class="form-control" placeholder="Digite unicamente números" id="security_">
+                    </div>
+                  </div>
+            </div>
+                
+
+        </form>
+    </div>
+
+    <div class="col"></div>
+{% endblock %}
