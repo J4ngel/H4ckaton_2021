@@ -8,6 +8,7 @@ Bootstrap(app)
 def principal():
     return render_template('tienda.html')
 
+# Yessid: Inicio de usuario (similar a "/")
 @app.route('/usuario')
 def usuario():
     return render_template('usuarioExterno.html')
@@ -15,6 +16,11 @@ def usuario():
 @app.route('/login', methods=['GET','POST'])
 def login():
     return render_template('login.html')
+
+# Yessid: Pagina de recuperar contraseña
+@app.route('/login/recuperar')
+def recuperar():
+    return render_template('recuperar.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
