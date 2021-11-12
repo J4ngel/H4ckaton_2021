@@ -2,11 +2,16 @@
 
 {% block title %}Usuario Externo{% endblock %}
 
-{% block espacios %}
-<br><br><br>
+{% block alertas %}
+    {% for message in get_flashed_messages() %}            
+        <div class="alert alert-warning" style="margin-top:10px;" role="alert">
+            <b>{{ message }}</b>
+        </div>
+    {% endfor %}
 {% endblock %}
 
 {% block desarrollo %}
+    <br><br><br>
     <div class="col"></div>
 
     <div class="row d-flex justify-content-center">
@@ -14,7 +19,7 @@
         </div>
         <div class="col-4 ">
             <div class="imagen d-flex justify-content-center">
-            <img src="{{url_for('static',filename='images/user.png')}}"  alt="User" width="40%">
+                <img src="{{url_for('static',filename='images/user.png')}}"  alt="User" width="40%">
             </div>
             <br>
             <br>

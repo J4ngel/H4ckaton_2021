@@ -2,11 +2,16 @@
 
 {% block title %}Usuario Externo{% endblock %}
 
-{% block espacios %}
-<br><br><br>
+{% block alertas %}
+    {% for message in get_flashed_messages() %}            
+        <div class="alert alert-warning" style="margin-top:10px;" role="alert">
+            <b>{{ message }}</b>
+        </div>
+    {% endfor %}
 {% endblock %}
 
 {% block desarrollo %}
+<br><br><br>
     <div class="col"></div>
 
     <div class="col-3">
