@@ -9,10 +9,15 @@ Bootstrap(app)
 def principal():
     return render_template('index.html')
 
-# Yessid: Inicio de usuario (similar a "/")
+# Yessid: Pagina de usuario externo
 @app.route('/usuario')
 def usuario():
     return render_template('usuarioExterno.html')
+
+# Yessid: Pagina de usuario interno
+@app.route('/empleado')
+def empleado():
+    return render_template('usuarioInterno.html')
 
 @app.route('/login', methods=['GET','POST'])
 def login():
