@@ -3,11 +3,17 @@
 {% block title %}Usuario Externo{% endblock %}
 
 {% block alertas %}
-    {% for message in get_flashed_messages() %}            
+<div class="row">
+    {% for message in get_flashed_messages() %}
+    <div class="col"></div>
+    <div class="col-6 text-center">
         <div class="alert alert-warning" style="margin-top:10px;" role="alert">
             <b>{{ message }}</b>
         </div>
+    </div>
+    <div class="col"></div>
     {% endfor %}
+</div>
 {% endblock %}
 
 {% block desarrollo %}
@@ -15,19 +21,19 @@
     <div class="col"></div>
 
     <div class="col-3">
-        <form class="align-items-center">
+        <form action="/login" class="align-items-center" style="margin-top:36px" method="POST" id="form_login" enctype="multipart/form-data">
             <div class="mb-3 text-center">
                 <img src="{{url_for('static',filename='images/user.png')}}" alt="User" width="200px" height="200px">
             </div>
 
             <div class="mb-3">
                 <label for="id_field" class="form-label">Cedula</label>
-                <input type="text" class="form-control" placeholder="Digite unicamente números" id="id_field">
+                <input type="text" class="form-control" placeholder="Digite unicamente números" id="id_field" name="cedula">
                 <div id="info" class="form-text">No compartiremos tu cedula con nadie mas</div>
             </div>
             <div class="mb-3">
                 <label for="password_field" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password_field" placeholder="Password">
+                <input type="password" class="form-control" id="password_field" placeholder="Password" name="password">
             </div>
 
             <div class="mb-3">
@@ -46,18 +52,18 @@
                         <div class="mb-3"></div>
 
                         <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Digite su nombre completo" id="name">
+                            <input type="text" class="form-control" placeholder="Digite su nombre completo" id="name" name="name">
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Digite la fecha de nacimiento ej: 23/08/1998" id="date">
+                            <input type="date" class="form-control" id="date" name="birthday">
                         </div>
                         <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Respuesta a pregunta de seguridad" id="security_word">
+                            <input type="password" class="form-control" placeholder="Respuesta a pregunta de seguridad" id="security_word" name="phrase">
                         </div>
 
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-warning">Recuperar nombre de usuario</button>
-                            <button type="button" class="btn btn-warning">Recuperar contraseña</button>            
+                            <button type="submit" class="btn btn-warning" id="btn_recuperar_datos">Recuperar nombre de usuario</button>
+                            <button type="submit" class="btn btn-warning" id="btn_recuperar_pass">Recuperar contraseña</button>            
                         </div>
 
                     </div>
@@ -67,4 +73,8 @@
     </div>
 
     <div class="col"></div>
+{% endblock %}
+
+{% block script_especifico %}
+<script src="{{url_for('static', filename='js/login.js')}}"></script>
 {% endblock %}
