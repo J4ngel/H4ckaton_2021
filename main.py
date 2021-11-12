@@ -79,9 +79,14 @@ def recuperar_usuario():
         flash(status_1['error'])
         return redirect('/login')
     else:
-        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
-        flash("Su usuario es: nnnnn")
-        return redirect('/login')
+        status_2 = db_manager.recuperar_usuario(name,birthday,phrase)
+        
+        if not status_2['state']:
+            flash(status_2['error'])
+            return redirect('/login')
+        else:
+            flash(f"Su usuario es: {status_2['data'][0]}")
+            return redirect('/login')
 
 @app.route('/login/recuperar_contraseña', methods=['POST'])
 def verificar_persona():
@@ -95,18 +100,41 @@ def verificar_persona():
         flash(status_1['error'])
         return redirect('/login')
     else:
-        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
-        session['valid_change']=True
-        return redirect('/login/cambio_contraseña')
+        status_2 = db_manager.recuperar_usuario(name,birthday,phrase)
+            
+        if not status_2['state']:
+            flash(status_2['error'])
+            return redirect('/login')
+        else:
+            session['valid_change']=True
+            session['id_user'] = status_2['data'][1]
+            return redirect('/login/cambio_contraseña')
 
 @app.route('/login/cambio_contraseña', methods=['GET', 'POST'])
 def recuperar_pass():
     if request.method == 'POST':
-        #lectura de campos de la vista recuperar
-        pass
+        password = escape(request.form['password'])
+        check_pass= escape(request.form['check_pass'])
+        
+        status_1 = verifications.valid_recuperar_pass(password, check_pass)
+
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/login/cambio_contraseña')
+        else:
+            hash_pass = generate_password_hash(password)
+            status_2 = db_manager.recuperar_pass(hash_pass,session['id_user'])
+
+            if not status_2['state']:
+                flash(status_2['error'])
+                return redirect('/login/cambio_contraseña')
+            else:
+                session.pop('valid_change')
+                session.pop('id_usuario')
+                flash(status_2['data'])
+                return redirect('/login')
 
     if 'valid_change' in session:
-        session.pop('valid_change')
         return render_template('recuperar.html')
     else:
         flash("primero debe ingresar los datos dispuestos en el apartado recuperar información")
@@ -135,8 +163,8 @@ def registrarse():
             hash_pass = generate_password_hash(password)
             hash_phrase = generate_password_hash(phrase)
 
-            #status_2 = db_manager.reg_1(cedula,name,gender,birthday,city,adds,hash_phrase,hash_pass,rol)
-            status_2 = {'state':True} #Linea SOLO PARA PRUEBAS
+            status_2 = db_manager.reg_1(cedula,name,gender,birthday,city,adds,hash_phrase,hash_pass,rol)           
+            
             if not status_2['state']:
                 flash(status_2['error'])
                 return redirect('/registrarse')
@@ -146,23 +174,11 @@ def registrarse():
                 else:
                     flash("Registro exitoso, ahora puede dirigirse a login e iniciar sesión")
                 return redirect('/registrarse')
-
-# Jacke: Pagina de administrador
-@app.route('/login/dashboard')
-def dashboard():
-    return render_template('dashboard/dashboard.html')
-
-@app.route('/login/dashboard/productos')
-def dashboard_productos():
-    return render_template('dashboard/dashboard_productos.html')
-
-@app.route('/login/dashboard/empleados')
-def dashboard_empleados():
-    return render_template('dashboard/dashboard_empleados.html')
-
-@app.route('/login/dashboard/clientes')
-def dashboard_clientes():
-    return render_template('dashboard/dashboard_clientes.html')
+    
+    if 'user' in session and session['rol'] != 3:
+        return redirect('/')
+    else:
+        return render_template('registrarse.html')
 
 @app.route('/registro/empleado', methods=['GET', 'POST'])
 def registro_empleado():
@@ -201,6 +217,23 @@ def registro_empleado():
         return redirect('/')
     else:
         return render_template('registro_empleado.html')
+
+# Jacke: Pagina de administrador
+@app.route('/login/dashboard')
+def dashboard():
+    return render_template('dashboard/dashboard.html')
+
+@app.route('/login/dashboard/productos')
+def dashboard_productos():
+    return render_template('dashboard/dashboard_productos.html')
+
+@app.route('/login/dashboard/empleados')
+def dashboard_empleados():
+    return render_template('dashboard/dashboard_empleados.html')
+
+@app.route('/login/dashboard/clientes')
+def dashboard_clientes():
+    return render_template('dashboard/dashboard_clientes.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

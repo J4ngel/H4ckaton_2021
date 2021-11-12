@@ -89,3 +89,23 @@ def empity_recuperar_info(name, birthday, phrase):
         status['state'] = False
         status['error'] = "El campo de la frase de seguridad está vacío"
     return status
+
+def valid_recuperar_pass(password,check_pass):
+    status = {'state':True, 'error': None}
+    if len(password) == 0 or len(check_pass) == 0:
+        status['state'] = False
+        status['error'] = "Algunos campos estan vacíos, verifiquelos y trate de nuevo"
+        return status
+    else:
+        if not valid_pass(password):
+                status['state'] = False
+                status['error'] = "La contraseña debe contener minimo 8 caracteres, entre ellos: numeros, letras (mayus y min) y un caracter especial"
+                return status
+
+        else:
+            if password != check_pass:
+                status['state'] = False
+                status['error'] = "Las contraseñas no coinciden"
+                return status
+            else:
+                return status
