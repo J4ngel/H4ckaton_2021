@@ -2,20 +2,13 @@
 
 {% block title %}Registro{% endblock %}
 
-{% block espacios %}
-<br><br><br>
-{% endblock %}
-
 {% block desarrollo %}
+    <div class="col" style="background-color: rgba(0,0,0,0.8);"></div>
 
-    <div class="col"></div>
-
-    <div class="col-3">
-        <!-- Aqui va la imagen que acompaña el form -->   
-    </div>
-
-    <div class="col-3">
+    <div class="col-3" style="color: white;background-color: rgba(0,0,0,0.8);">
+        <img src="{{url_for('static',filename='img/registro_img.png')}}" alt="Bienvenida"  width="60%" height="70%" style="position:absolute; left:20%; top:10%; z-index:-1;">
         <form>
+            <p></p>
             <div class="mb-3">
                 <label for="cedula_field" class="form-label">Cedula</label>
                 <input type="text" class="form-control" id="cedula_field" placeholder="Digite solo números">
@@ -26,7 +19,12 @@
                 <label for="name_field" class="form-label">Nombre</label>
                 <input type="text" class="form-control" id="name_field" placeholder="Digite su nombre completo">
             </div>
-    
+            
+            <div class="mb-3">
+                <label for="job_field" class="form-label">Cargo:</label>
+                <input type="text" class="form-control" id="job_field" placeholder="Digite su cargo en la compañía">
+            </div>
+
             <div class="input-group mb-3">
                 <select class="form-select" id="inputGroupSelect01">
                     <option selected>Seleccione su sexo...</option>
@@ -51,8 +49,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="job_field" class="form-label">Cargo en la compañía</label>
-                <input type="text" class="form-control" id="job_field" placeholder="Digite el cargo que desempeña en la compañía">
+                <label for="frase_field" class="form-label">Frase de recordatorio</label>
+                <input type="text" class="form-control" id="frase_field" placeholder="Digite una frase por si olvida su contraseña">
             </div>
 
             <div class="mb-3">
@@ -70,8 +68,9 @@
                 <label class="form-check-label" for="politicas">Acepta las politicas de privacidad y manejo de datos personales</label>
             </div>
             <button type="submit" class="btn btn-primary">Registrarse</button>
+            <p></p>
         </form>   
     </div>
 
-    <div class="col"></div>   
+    <div class="col" style="background-color: rgba(0,0,0,0.8);"></div>   
 {% endblock %}
