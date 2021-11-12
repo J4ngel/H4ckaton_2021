@@ -19,9 +19,15 @@ def usuario():
 def empleado():
     return render_template('usuarioInterno.html')
 
+# Yessid: Pagina de productos (clientte)
 @app.route('/productos')
 def tienda():
     return render_template('tienda.html')
+
+# Yessid: Pagina de productos (empleado)
+@app.route('/productos/enlatados')
+def precios():
+    return render_template('productoEnlatado.html')
 
 @app.route('/login', methods=['GET','POST'])
 def login():
