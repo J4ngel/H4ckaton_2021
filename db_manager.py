@@ -34,17 +34,27 @@ def reg_2(cedula, name, job, gender, birthday, city, adds, phrase, password, rol
         status['error'] = "Algo salió mal" + Error
         return status
         
-def name_session(ced, pas):
+def login_session(cedula, password):
+    status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect("/home/carlosortega/Documentos/hackaton_2021/H4ckaton_2021/orion.db") as con:
+        with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            query=cur.execute("SELECT Contraseña,Username FROM Usuarios WHERE cedula=?",[ced]).fetchone()
+            query=cur.execute("SELECT Contraseña, Nombre_y_apellido, rol FROM Usuarios WHERE Cedula=?",[cedula]).fetchone()
             if query!=None:
-                if query[0]==pas:
-                    return query
+                if check_password_hash(query[0],password):
+                    status['data']=query
+                    return status
                 else:
-                    return False
+                    status['state'] = False
+                    status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
+                    return status
+                    
             else:
-                return "No existe el usuario"
+                status['state'] = False
+                status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
+                return status
+        
     except Error:
-        return False
+        status['state'] = False
+        status['error'] = "Algo salió mal "+ Error
+        return status

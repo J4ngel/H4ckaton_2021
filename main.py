@@ -24,24 +24,27 @@ def usuario():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-    #     ced=escape(request.form['cedula'])
-    #     pas=escape(request.form['contrasena'])
-    #     result=db_manager.name_session(ced,pas)
-    #     user=result[1]
-    #     password=result[0]
-
-    # return render_template('login.html')
         cedula = escape(request.form['cedula'])
         password = escape(request.form['password'])
         
-        if cedula == "1234" and password=="1234":
-            session['user'] = 1234
-            session['rol'] = 3
-            flash(f"logueado con exito {session['user']}: {session['rol']}")
-            return redirect("/registro/empleado")
+        status_1 = verifications.empity_login(cedula,password)
+
+        if not status_1['state']:
+            flash(status_1['error'])
+            redirect('/login')
         else:
-            flash("Credenciales invalidas!!")
-            return redirect("/login")
+            status_2 = db_manager.login_session(cedula,password)
+
+        if not status_2['state']:
+            flash(status_2['error'])
+            return redirect('/login')
+
+        else:
+            session['user']=cedula
+            session['name']=status_2['data'][1]
+            session['rol']=status_2['data'][2]
+            print("logueo con exito")
+            return redirect('/')
 
     if 'user' in session:
         return redirect('/') #Se redirige al perfil
