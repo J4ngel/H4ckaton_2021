@@ -24,34 +24,77 @@ def usuario():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-    #     ced=escape(request.form['cedula'])
-    #     pas=escape(request.form['contrasena'])
-    #     result=db_manager.name_session(ced,pas)
-    #     user=result[1]
-    #     password=result[0]
-
-    # return render_template('login.html')
         cedula = escape(request.form['cedula'])
         password = escape(request.form['password'])
         
-        if cedula == "1234" and password=="1234":
-            session['user'] = 1234
-            session['rol'] = 3
-            flash(f"logueado con exito {session['user']}: {session['rol']}")
-            return redirect("/registro/empleado")
+        status_1 = verifications.empity_login(cedula,password)
+
+        if not status_1['state']:
+            flash(status_1['error'])
+            redirect('/login')
         else:
-            flash("Credenciales invalidas!!")
-            return redirect("/login")
+            status_2 = db_manager.login_session(cedula,password)
+
+            if not status_2['state']:
+                flash(status_2['error'])
+                return redirect('/login')
+
+            else:
+                session['user']=cedula
+                session['name']=status_2['data'][1]
+                session['rol']=status_2['data'][2]
+                print("logueo con exito")
+                return redirect('/')
 
     if 'user' in session:
         return redirect('/') #Se redirige al perfil
     else:
         return render_template('login.html')
         
-# Yessid: Pagina de recuperar contraseña
-@app.route('/login/recuperar')
-def recuperar():
-    return render_template('recuperar.html')
+@app.route('/login/recuperar_usuario', methods=['POST'])
+def recuperar_usuario():
+    name = escape(request.form['name'])
+    birthday= escape(request.form['birthday'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.empity_recuperar_info(name,birthday,phrase)
+
+    if not status_1['state']:
+        flash(status_1['error'])
+        return redirect('/login')
+    else:
+        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
+        flash("Su usuario es: nnnnn")
+        return redirect('/login')
+
+@app.route('/login/recuperar_contraseña', methods=['POST'])
+def verificar_persona():
+    name = escape(request.form['name'])
+    birthday= escape(request.form['birthday'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.empity_recuperar_info(name,birthday,phrase)
+
+    if not status_1['state']:
+        flash(status_1['error'])
+        return redirect('/login')
+    else:
+        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
+        session['valid_change']=True
+        return redirect('/login/cambio_contraseña')
+
+@app.route('/login/cambio_contraseña', methods=['GET', 'POST'])
+def recuperar_pass():
+    if request.method == 'POST':
+        #lectura de campos de la vista recuperar
+        pass
+
+    if 'valid_change' in session:
+        session.pop('valid_change')
+        return render_template('recuperar.html')
+    else:
+        flash("primero debe ingresar los datos dispuestos en el apartado recuperar información")
+        return redirect('/login')
 
 @app.route('/registrarse', methods=['GET','POST'])
 def registrarse():

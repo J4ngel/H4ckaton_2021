@@ -65,3 +65,27 @@ def valid_reg_2(cedula, name, job, gender, birthday, city, adds, phrase, passwor
                 
                 else:
                     return status
+
+#-----> VALIDACION CAJAS DE TEXTO LOGIN (CEDULA Y CONTRASEÑA)
+def empity_login(cedula, password):
+    status = {'state':True, 'error':None}
+
+    if len(cedula) == 0:
+        status['state'] = False
+        status['error'] = "El campo de la cedula está vacío"
+    elif len(password) == 0:
+        status['state'] = False
+        status['error'] = "El campo de la contraseña está vacío"
+    return status
+
+#-----> VALIDACION CAJAS DE TEXTO LOGIN DE RECUPERAR(NOMBRE, CUMPLEAÑOS Y FRASE)
+def empity_recuperar_info(name, birthday, phrase):
+    status = {'state':True, 'error':None}
+
+    if len(name) == 0:
+        status['state'] = False
+        status['error'] = "El campo de nombre está vacío"
+    elif len(phrase) == 0:
+        status['state'] = False
+        status['error'] = "El campo de la frase de seguridad está vacío"
+    return status
