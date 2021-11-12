@@ -19,6 +19,10 @@ def usuario():
 def empleado():
     return render_template('usuarioInterno.html')
 
+@app.route('/productos')
+def tienda():
+    return render_template('tienda.html')
+
 @app.route('/login', methods=['GET','POST'])
 def login():
     return render_template('login.html')

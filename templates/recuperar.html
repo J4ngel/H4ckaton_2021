@@ -2,10 +2,16 @@
 
 {% block title %}Recuperar Contrasena{% endblock %}
 
-{% block espacios %} <br><br> {% endblock %}
+{% block alertas %}
+    {% for message in get_flashed_messages() %}            
+        <div class="alert alert-warning" style="margin-top:10px;" role="alert">
+            <b>{{ message }}</b>
+        </div>
+    {% endfor %}
+{% endblock %}
 
 {% block desarrollo %}
-
+<br><br>
 <div class="col"></div>
 
     <div class="col-3">
