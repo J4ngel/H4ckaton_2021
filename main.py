@@ -1,8 +1,16 @@
-from flask import Flask, render_template, redirect, url_for, session, flash
+import os
+import hashlib
+import db_manager
+import verifications
+
+from flask import Flask, render_template, request, redirect, url_for, session, flash
+from markupsafe import escape
 from flask_bootstrap import Bootstrap
+from werkzeug.security import check_password_hash, generate_password_hash
 
 app = Flask(__name__)
 Bootstrap(app)
+app.secret_key = os.urandom(24)
 
 # Jacke: Pagina principal
 @app.route('/')
@@ -31,16 +39,113 @@ def precios():
 
 @app.route('/login', methods=['GET','POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'POST':
+        cedula = escape(request.form['cedula'])
+        password = escape(request.form['password'])
+        
+        status_1 = verifications.empity_login(cedula,password)
 
-# Yessid: Pagina de recuperar contraseña
-@app.route('/login/recuperar')
-def recuperar():
-    return render_template('recuperar.html')
+        if not status_1['state']:
+            flash(status_1['error'])
+            redirect('/login')
+        else:
+            status_2 = db_manager.login_session(cedula,password)
 
-@app.route('/registrarse')
+            if not status_2['state']:
+                flash(status_2['error'])
+                return redirect('/login')
+
+            else:
+                session['user']=cedula
+                session['name']=status_2['data'][1]
+                session['rol']=status_2['data'][2]
+                print("logueo con exito")
+                return redirect('/')
+
+    if 'user' in session:
+        return redirect('/') #Se redirige al perfil
+    else:
+        return render_template('login.html')
+        
+@app.route('/login/recuperar_usuario', methods=['POST'])
+def recuperar_usuario():
+    name = escape(request.form['name'])
+    birthday= escape(request.form['birthday'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.empity_recuperar_info(name,birthday,phrase)
+
+    if not status_1['state']:
+        flash(status_1['error'])
+        return redirect('/login')
+    else:
+        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
+        flash("Su usuario es: nnnnn")
+        return redirect('/login')
+
+@app.route('/login/recuperar_contraseña', methods=['POST'])
+def verificar_persona():
+    name = escape(request.form['name'])
+    birthday= escape(request.form['birthday'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.empity_recuperar_info(name,birthday,phrase)
+
+    if not status_1['state']:
+        flash(status_1['error'])
+        return redirect('/login')
+    else:
+        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
+        session['valid_change']=True
+        return redirect('/login/cambio_contraseña')
+
+@app.route('/login/cambio_contraseña', methods=['GET', 'POST'])
+def recuperar_pass():
+    if request.method == 'POST':
+        #lectura de campos de la vista recuperar
+        pass
+
+    if 'valid_change' in session:
+        session.pop('valid_change')
+        return render_template('recuperar.html')
+    else:
+        flash("primero debe ingresar los datos dispuestos en el apartado recuperar información")
+        return redirect('/login')
+
+@app.route('/registrarse', methods=['GET','POST'])
 def registrarse():
-    return render_template('registrarse.html')
+    if request.method == 'POST':
+        cedula      = escape(request.form['cedula'])
+        name        = escape(request.form['name'])
+        gender      = escape(request.form['gender'])
+        birthday     = escape(request.form['birthday'])
+        city        = escape(request.form['city'])
+        adds        = escape(request.form['adds'])
+        phrase      = escape(request.form['phrase'])
+        password    = escape(request.form['password'])
+        check_pass  = escape(request.form['check_pass'])
+        conditions  = escape(request.form.get('conditions'))
+        rol = 1  # 1 -> usuario externo / 2 -> usuario externo / 3 -> usuario externo   
+
+        status_1 = verifications.valid_reg_1(cedula,name,gender,birthday,city,adds,phrase,password,check_pass,conditions)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/registrarse')
+        else:
+            hash_pass = generate_password_hash(password)
+            hash_phrase = generate_password_hash(phrase)
+
+            #status_2 = db_manager.reg_1(cedula,name,gender,birthday,city,adds,hash_phrase,hash_pass,rol)
+            status_2 = {'state':True} #Linea SOLO PARA PRUEBAS
+            if not status_2['state']:
+                flash(status_2['error'])
+                return redirect('/registrarse')
+            else:
+                if 'user' in session and session['rol'] == 3:  
+                    flash("Registro exitoso, nuevo cliente agregado con exito")
+                else:
+                    flash("Registro exitoso, ahora puede dirigirse a login e iniciar sesión")
+                return redirect('/registrarse')
 
 # Jacke: Pagina de administrador
 @app.route('/login/dashboard')
@@ -59,9 +164,43 @@ def dashboard_empleados():
 def dashboard_clientes():
     return render_template('dashboard/dashboard_clientes.html')
 
-@app.route('/registro/empleado')
+@app.route('/registro/empleado', methods=['GET', 'POST'])
 def registro_empleado():
-    return render_template('registro_empleado.html')
+    if request.method == 'POST':
+        cedula      = escape(request.form['cedula'])
+        name        = escape(request.form['name'])
+        job         = escape(request.form['job'])
+        gender      = escape(request.form['gender'])
+        birthday     = escape(request.form['birthday'])
+        city        = escape(request.form['city'])
+        adds        = escape(request.form['adds'])
+        phrase      = escape(request.form['phrase'])
+        password    = escape(request.form['password'])
+        check_pass  = escape(request.form['check_pass'])
+        conditions  = escape(request.form.get('conditions'))
+        rol = 2  # 1 -> usuario externo / 2 -> usuario interno / 3 -> admin  
+
+        status_1 = verifications.valid_reg_2(cedula,name,job,gender,birthday,city,adds,phrase,password,check_pass,conditions)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/registro/empleado')
+        else:
+            hash_pass = generate_password_hash(password)
+            hash_phrase = generate_password_hash(phrase)
+
+            #status_2 = db_manager.reg_2(cedula,name,job,gender,birthday,city,adds,hash_phrase,hash_pass,rol)
+            status_2 = {'state':True} #Linea SOLO PARA PRUEBAS
+            if not status_2['state']:
+                flash(status_2['error'])
+                return redirect('/registro/empleado')
+            else:
+                flash("Registro exitoso, nuevo empleado agregado con exito")
+                return redirect('/registro/empleado')
+
+    if 'user' in session and session['rol'] != 3:
+        return redirect('/')
+    else:
+        return render_template('registro_empleado.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
