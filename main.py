@@ -45,6 +45,10 @@ def dashboard_productos():
 def dashboard_empleados():
     return render_template('dashboard/dashboard_empleados.html')
 
+@app.route('/login/dashboard/clientes')
+def dashboard_clientes():
+    return render_template('dashboard/dashboard_clientes.html')
+
 @app.route('/registro/empleado')
 def registro_empleado():
     return render_template('registro_empleado.html')

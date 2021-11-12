@@ -70,8 +70,8 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Tipos de Usuarios:</h6>
-                        <a class="collapse-item" href="buttons.html">Empleados</a>
-                        <a class="collapse-item" href="cards.html">Clientes</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_empleados')}}">Empleados</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_clientes')}}">Clientes</a>
                     </div>
                 </div>
             </li>
@@ -88,9 +88,9 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Alimentos no Peresederos:</h6>
                         <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Cereales</a>
-                        <a class="collapse-item" href="utilities-border.html">Enlatados</a>
-                        <a class="collapse-item" href="utilities-animation.html">Frutos Secos</a>
-                        <a class="collapse-item" href="utilities-other.html">Otros</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Enlatados</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Frutos Secos</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Otros</a>
                     </div>
                 </div>
             </li>
@@ -144,14 +144,7 @@
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-            <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-            </div>
+            </div>   
 
         </ul>
         <!-- End of Sidebar -->
@@ -368,12 +361,13 @@
 
                 <!-- Begin Page Content -->
                 {% block contenido %}
+
                 {% endblock %}
                 <!-- /.container-fluid -->
 
             </div>
             <!-- End of Main Content -->
-
+            {% block footer %}
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -431,7 +425,7 @@
     <!-- Page level custom scripts -->
     <script src="{{ url_for('static', filename = 'js/demo/chart-area-demo.js')}}"></script>
     <script src="{{ url_for('static', filename = 'js/demo/chart-pie-demo.js')}}"></script>
-
+    {% endblock %}
 </body>
 
 </html>

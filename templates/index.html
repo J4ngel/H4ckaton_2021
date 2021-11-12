@@ -56,11 +56,15 @@
                             <div class="limit-box">
                                 <nav class="main-menu">
                                     <ul class="menu-area-main">
-                                        <li class="active"><a href="#home">Inicio</a></li>
+                                        <li class="active"><a href="{{url_for('principal')}}">Inicio</a></li>
                                         <li><a href="#about">Alimentos</a></li>
-                                        {% if session['tipo_usuario'] == 1 %}
-                                            <li><a href="#fruits">Perfil</a></li>
+                                        {% if session['rol'] == 1 %}
+                                            <li><a href="{{url_for('usuario')}}">Perfil</a></li>
                                             <li><a href="#contact">Carrito de compras</a></li>
+                                            <li><a href="{{url_for('logout')}}">logout</a></li>
+                                        {% elif session['rol'] == 2 %}
+                                            <li><a href="{{url_for('empleado')}}">Perfil</a></li>
+                                            <li><a href="{{url_for('logout')}}">logout</a></li>
                                         {% else %}
                                             <li><a href= "{{url_for('login')}}" >Inicio de Sesión</a></li>
                                             <li><a href= "{{url_for('registrarse')}}">Registrate</a></li>
