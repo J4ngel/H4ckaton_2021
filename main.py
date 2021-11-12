@@ -22,5 +22,13 @@ def login():
 def recuperar():
     return render_template('recuperar.html')
 
+@app.route('/registrarse')
+def registrarse():
+    return render_template('registrarse.html')
+
+@app.route('/registro/empleado')
+def registro_empleado():
+    return render_template('registro_empleado.html')
+
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
