@@ -33,7 +33,7 @@ def reg_2(cedula, name, job, gender, birthday, city, adds, phrase, password, rol
         status['state'] = False
         status['error'] = "Algo salió mal" + Error
         return status
-        
+
 def name_session(ced, pas):
     try:
         with sqlite3.connect("/home/carlosortega/Documentos/hackaton_2021/H4ckaton_2021/orion.db") as con:
