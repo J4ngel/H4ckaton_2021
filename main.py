@@ -4,9 +4,10 @@ from flask_bootstrap import Bootstrap
 app = Flask(__name__)
 Bootstrap(app)
 
+# Jacke: Pagina principal
 @app.route('/')
 def principal():
-    return render_template('tienda.html')
+    return render_template('index.html')
 
 # Yessid: Inicio de usuario (similar a "/")
 @app.route('/usuario')
@@ -25,6 +26,15 @@ def recuperar():
 @app.route('/registrarse')
 def registrarse():
     return render_template('registrarse.html')
+
+# Jacke: Pagina de administrador
+@app.route('/login/dashboard')
+def dashboard():
+    return render_template('dashboard/dashboard.html')
+
+@app.route('/login/dashboard/productos')
+def dashboard_productos():
+    return render_template('dashboard/dashboard_productos.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
