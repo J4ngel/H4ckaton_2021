@@ -35,16 +35,16 @@ def login():
         else:
             status_2 = db_manager.login_session(cedula,password)
 
-        if not status_2['state']:
-            flash(status_2['error'])
-            return redirect('/login')
+            if not status_2['state']:
+                flash(status_2['error'])
+                return redirect('/login')
 
-        else:
-            session['user']=cedula
-            session['name']=status_2['data'][1]
-            session['rol']=status_2['data'][2]
-            print("logueo con exito")
-            return redirect('/')
+            else:
+                session['user']=cedula
+                session['name']=status_2['data'][1]
+                session['rol']=status_2['data'][2]
+                print("logueo con exito")
+                return redirect('/')
 
     if 'user' in session:
         return redirect('/') #Se redirige al perfil

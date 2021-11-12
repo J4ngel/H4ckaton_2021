@@ -35,19 +35,7 @@
             </div>
         </div>
 
-        {% block espacios %}{% endblock %}
-   
-        <div class="row" style="background-color: rgba(0,0,0,0.8);">
-            {% for message in get_flashed_messages() %}
-            <div class="col"></div>
-            <div class="col-6 text-center">
-                <div class="alert alert-warning" style="margin-top:10px;" role="alert">
-                    <b>{{ message }}</b>
-                </div>
-            </div>
-            <div class="col"></div>
-            {% endfor %}
-        </div>
+        {% block alertas %}{% endblock %}
 
         <div class="row">
             {% block desarrollo %}{% endblock %}

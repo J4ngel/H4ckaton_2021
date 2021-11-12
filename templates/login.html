@@ -2,15 +2,25 @@
 
 {% block title %}Login{% endblock %}
 
-{% block espacios %}
-<br><br><br>
+{% block alertas %}
+<div class="row">
+    {% for message in get_flashed_messages() %}
+    <div class="col"></div>
+    <div class="col-6 text-center">
+        <div class="alert alert-warning" style="margin-top:10px;" role="alert">
+            <b>{{ message }}</b>
+        </div>
+    </div>
+    <div class="col"></div>
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block desarrollo %}
     <div class="col"></div>
 
     <div class="col-3">
-        <form action="/login" class="align-items-center" method="POST">
+        <form action="/login" class="align-items-center" style="margin-top:36px" method="POST">
             <div class="mb-3 text-center">
                 <img src="{{url_for('static',filename='img/user.png')}}" alt="User" width="200px" height="200px">
             </div>
