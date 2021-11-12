@@ -1,12 +1,40 @@
 {%  extends "constantes.html" %}
 
-{% block title %}Tienda{% endblock %}
+{% block title %}Recuperar Contrasena{% endblock %}
+
+{% block espacios %} <br><br> {% endblock %}
 
 {% block desarrollo %}
-<h1>Recuperar usuario/contraseña</h1>
-<br> <br> <br>
+
+<div class="col"></div>
+
+    <div class="col-3">
+        <form class="align-items-center">
+            <div class="mb-3 text-center">
+                <img src="{{url_for('static',filename='images/apple_gear.png')}}" alt="User" width="70%" height="70%">
+            </div>
+
+            <div class="mb-3">
+                <h5> <label for="id_field" class="form-label">Digite la nueva contraseña</label> </h5>
+                <input type="text" class="form-control" placeholder="Password" id="id_field">
+            </div>
+            <br>
+            <div class="mb-3">
+                <h5> <label for="password_field" class="form-label">Repita la nueva contraseña</label> </h5> 
+                <input type="password" class="form-control" id="password_field" placeholder="Password">
+                <div id="info" class="form-text">Nota: Las 2 contraseñas tienen que ser iguales</div>
+            </div>
+
+            <div class="mb-3 text-center">
+                <button type="submit" class="btn btn-primary">Continuar</button>
+                <button type="button" class="btn btn-primary">Cancelar</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="col"></div>
+
 
 
 {% endblock %}
-
-
