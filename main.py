@@ -27,7 +27,6 @@ def recuperar():
 def registrarse():
     return render_template('registrarse.html')
 
-<<<<<<< HEAD
 # Jacke: Pagina de administrador
 @app.route('/login/dashboard')
 def dashboard():
@@ -36,11 +35,14 @@ def dashboard():
 @app.route('/login/dashboard/productos')
 def dashboard_productos():
     return render_template('dashboard/dashboard_productos.html')
-=======
+
+@app.route('/login/dashboard/empleados')
+def dashboard_empleados():
+    return render_template('dashboard/dashboard_empleados.html')
+
 @app.route('/registro/empleado')
 def registro_empleado():
     return render_template('registro_empleado.html')
->>>>>>> ec20ddf4ecd63cbaaef034f47ef38b523c6f08be
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
