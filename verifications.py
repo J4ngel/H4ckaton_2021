@@ -77,3 +77,15 @@ def empity_login(cedula, password):
         status['state'] = False
         status['error'] = "El campo de la contraseña está vacío"
     return status
+
+#-----> VALIDACION CAJAS DE TEXTO LOGIN DE RECUPERAR(NOMBRE, CUMPLEAÑOS Y FRASE)
+def empity_recuperar_info(name, birthday, phrase):
+    status = {'state':True, 'error':None}
+
+    if len(name) == 0:
+        status['state'] = False
+        status['error'] = "El campo de nombre está vacío"
+    elif len(phrase) == 0:
+        status['state'] = False
+        status['error'] = "El campo de la frase de seguridad está vacío"
+    return status

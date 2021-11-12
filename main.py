@@ -53,12 +53,48 @@ def login():
         
 @app.route('/login/recuperar_usuario', methods=['POST'])
 def recuperar_usuario():
-    flash("SI SOY")
-    return redirect('/login')
+    name = escape(request.form['name'])
+    birthday= escape(request.form['birthday'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.empity_recuperar_info(name,birthday,phrase)
+
+    if not status_1['state']:
+        flash(status_1['error'])
+        return redirect('/login')
+    else:
+        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
+        flash("Su usuario es: nnnnn")
+        return redirect('/login')
 
 @app.route('/login/recuperar_contraseña', methods=['POST'])
+def verificar_persona():
+    name = escape(request.form['name'])
+    birthday= escape(request.form['birthday'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.empity_recuperar_info(name,birthday,phrase)
+
+    if not status_1['state']:
+        flash(status_1['error'])
+        return redirect('/login')
+    else:
+        #busqueda en la base de datos con retorno de cedula si encuentra las 3 coincidencias
+        session['valid_change']=True
+        return redirect('/login/cambio_contraseña')
+
+@app.route('/login/cambio_contraseña', methods=['GET', 'POST'])
 def recuperar_pass():
-    return render_template('recuperar.html')
+    if request.method == 'POST':
+        #lectura de campos de la vista recuperar
+        pass
+
+    if 'valid_change' in session:
+        session.pop('valid_change')
+        return render_template('recuperar.html')
+    else:
+        flash("primero debe ingresar los datos dispuestos en el apartado recuperar información")
+        return redirect('/login')
 
 @app.route('/registrarse', methods=['GET','POST'])
 def registrarse():
