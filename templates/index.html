@@ -62,8 +62,8 @@
                                             <li><a href="#fruits">Perfil</a></li>
                                             <li><a href="#contact">Carrito de compras</a></li>
                                         {% else %}
-                                            <li><a href="#fruits">Inicio de Sesión</a></li>
-                                            <li><a href="#contact">Registrate</a></li>
+                                            <li><a href= "{{url_for('login')}}" >Inicio de Sesión</a></li>
+                                            <li><a href= "{{url_for('registrarse')}}">Registrate</a></li>
                                         {% endif  %}
                                     </ul>
                                 </nav>
@@ -275,25 +275,25 @@
         <div class="footer layout_padding">
             <div class="container">
                     <div class="row">
-                        <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <h3>Contactenos</h3>
                             <p>Barranquilla-Colombia<br><br>(+57) 312 654 3210<br><br>orion@gmail.com</p>
                         </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <h3>Pages</h3>
                             <p>
                               <a href="#home">Inicio</a><br>
                               <a href="#about">Alimentos</a><br>
-                              <a href="#fruits">Inicio de Sesión</a><br>
-                              <a href="#blog">Registrate</a><br>                              
+                              <a href="{{url_for('login')}}">Inicio de Sesión</a><br>
+                              <a href="{{url_for('registrarse')}}">Registrate</a><br>                              
                         </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
+                        <div class="col-lg-4 col-md-6 col-sm-12">
                             <h3>Ultimas Noticias</h3>
                             <p><span><img src="{{ url_for('static', filename= 'images/f1.jpg') }}" width="80"></span><span>Cereales<br>Alimentos no perecederos</span></p>
                             <p class="margin_top_20"><span><img src="{{ url_for('static', filename= 'images/f2.jpg') }}" width="80"></span><span>Enlatados<br>Alimentos no perecederos</span></p>
                             <p class="margin_top_20"><span><img src="{{ url_for('static', filename= 'images/f3.jpeg') }}" width="80"></span><span>Frutos Secos<br>Alimentos no perecederos</span></p>
                         </div>
-                        <div class="col-lg-3 col-md-6 col-sm-12">
+                        <!-- <div class="col-lg-3 col-md-6 col-sm-12">
                             <h3>Newsletter</h3>
                             <p>
                                 <form>
@@ -301,15 +301,15 @@
                                     <button>Subscribe</button>
                                 </form>
                             </p>
-                        </div>
+                        </div> -->
                     </div>
             </div>
         </div>
-        <div class="copyright">
+        <!-- <div class="copyright">
             <div class="container">
                 <p>Copyright 2019 All Right Reserved By <a href="https://html.design/">Free html Templates</a></p>
             </div>
-        </div>
+        </div> -->
     </footer>
     <!-- end footer -->
     <!-- Javascript files-->
