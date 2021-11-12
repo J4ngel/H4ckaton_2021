@@ -24,6 +24,13 @@ def usuario():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
+    #     ced=escape(request.form['cedula'])
+    #     pas=escape(request.form['contrasena'])
+    #     result=db_manager.name_session(ced,pas)
+    #     user=result[1]
+    #     password=result[0]
+
+    # return render_template('login.html')
         cedula = escape(request.form['cedula'])
         password = escape(request.form['password'])
         
@@ -40,7 +47,7 @@ def login():
         return redirect('/') #Se redirige al perfil
     else:
         return render_template('login.html')
-
+        
 # Yessid: Pagina de recuperar contraseña
 @app.route('/login/recuperar')
 def recuperar():

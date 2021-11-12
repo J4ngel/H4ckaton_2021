@@ -33,3 +33,18 @@ def reg_2(cedula, name, job, gender, birthday, city, adds, phrase, password, rol
         status['state'] = False
         status['error'] = "Algo salió mal" + Error
         return status
+        
+def name_session(ced, pas):
+    try:
+        with sqlite3.connect("/home/carlosortega/Documentos/hackaton_2021/H4ckaton_2021/orion.db") as con:
+            cur = con.cursor()
+            query=cur.execute("SELECT Contraseña,Username FROM Usuarios WHERE cedula=?",[ced]).fetchone()
+            if query!=None:
+                if query[0]==pas:
+                    return query
+                else:
+                    return False
+            else:
+                return "No existe el usuario"
+    except Error:
+        return False
