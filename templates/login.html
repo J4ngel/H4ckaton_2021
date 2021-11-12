@@ -20,7 +20,7 @@
     <div class="col"></div>
 
     <div class="col-3">
-        <form action="/login" class="align-items-center" style="margin-top:36px" method="POST">
+        <form action="/login" class="align-items-center" style="margin-top:36px" method="POST" id="form_login" enctype="multipart/form-data">
             <div class="mb-3 text-center">
                 <img src="{{url_for('static',filename='img/user.png')}}" alt="User" width="200px" height="200px">
             </div>
@@ -61,8 +61,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <button type="submit" class="btn btn-warning">Recuperar nombre de usuario</button>
-                            <button type="button" class="btn btn-warning">Recuperar contraseña</button>            
+                            <button type="submit" class="btn btn-warning" id="btn_recuperar_datos">Recuperar nombre de usuario</button>
+                            <button type="submit" class="btn btn-warning" id="btn_recuperar_pass">Recuperar contraseña</button>            
                         </div>
 
                     </div>
@@ -72,4 +72,8 @@
     </div>
 
     <div class="col"></div>
+{% endblock %}
+
+{% block script_especifico %}
+<script src="{{url_for('static', filename='js/login.js')}}"></script>
 {% endblock %}

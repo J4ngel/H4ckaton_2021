@@ -51,9 +51,13 @@ def login():
     else:
         return render_template('login.html')
         
-# Yessid: Pagina de recuperar contraseña
-@app.route('/login/recuperar')
-def recuperar():
+@app.route('/login/recuperar_usuario', methods=['POST'])
+def recuperar_usuario():
+    flash("SI SOY")
+    return redirect('/login')
+
+@app.route('/login/recuperar_contraseña', methods=['POST'])
+def recuperar_pass():
     return render_template('recuperar.html')
 
 @app.route('/registrarse', methods=['GET','POST'])
