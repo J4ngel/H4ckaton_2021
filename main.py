@@ -130,7 +130,7 @@ def recuperar_pass():
                 return redirect('/login/cambio_contraseña')
             else:
                 session.pop('valid_change')
-                session.pop('id_usuario')
+                session.pop('id_user')
                 flash(status_2['data'])
                 return redirect('/login')
 
