@@ -21,6 +21,13 @@
 
             <div class="col-6">
             </div>
+            {% if 'user' in session%}
+                {% if session['rol'] == 1 or session['rol'] == 2%}
+                <div class="col-3">
+                    <a href="/logout"><button class="btn btn-light" id=>Logout</button></a>
+                </div> 
+                {% endif %}
+            {% endif %}
         </div>
 
         {% block alertas %}{% endblock %}

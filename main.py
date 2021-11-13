@@ -79,10 +79,8 @@ def login():
 
                 if session['rol'] == 3:
                     return redirect('/login/dashboard')
-                elif session['rol'] == 2:
-                    return redirect('/empleado')
                 else:
-                    return redirect('/usuario')
+                    return redirect('/')
 
     if 'user' in session:
         if session['rol']==3:
@@ -93,7 +91,17 @@ def login():
             return redirect('/usuario')
     else:
         return render_template('login.html')
-        
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    if 'user' in session:
+        session.clear()
+        flash('Sesión cerrada exitosamente!')
+        return redirect('/login')
+    else:
+        flash("Primero debe iniciar sesion")
+        return redirect('/login')
+
 @app.route('/login/recuperar_usuario', methods=['POST'])
 def recuperar_usuario():
     name = escape(request.form['name'])
@@ -251,15 +259,6 @@ def registro_empleado():
 # Jacke: Pagina de administrador
 @app.route('/login/dashboard', methods=['GET','POST'])
 def dashboard():
-    if request.method == 'POST':
-        if 'user' in session:
-            session.clear()
-            flash('Sesión cerrada exitosamente!')
-            return redirect('/login')
-        else:
-            flash("Primero debe iniciar sesion")
-            return redirect('/login')
-
     if 'user' in session:
         if session['rol'] == 3:
             return render_template('dashboard/dashboard.html')
