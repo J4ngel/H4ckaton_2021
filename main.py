@@ -15,10 +15,9 @@ app.secret_key = os.urandom(24)
 
 #---------------------------FUNCIONES UTILES JACKE--------------------------------
 def confBd():
-    if get_env() == 'development':
-        path = ''
-    elif get_env == 'production':
-        path = '/home/jackenamor/Hospital-Militar-Central/'
+    path = ''
+    if get_env == 'production':
+        path = os.path.abspath(os.getcwd())
     return path
 #-------------------------------------------------------------------------------
 
@@ -196,13 +195,47 @@ def registrarse():
 def dashboard():
     return render_template('dashboard/dashboard.html')
 
+@app.route('/login/dashboard/productos/<tipo_producto>')
 @app.route('/login/dashboard/productos')
-def dashboard_productos():
-    return render_template('dashboard/dashboard_productos.html')
-
+def dashboard_productos(tipo_producto):
+    if request.method == 'GET':
+        columnas = []
+        busqueda_columnas = db_manager.get_columns_productos()
+        # Agrego a columnas los nombres de las columnas buscado en bd
+        for i in busqueda_columnas:
+            columnas.append(f'{i}')
+        #Organizo la información mostrada por defecto, todos los médicos
+        productos = []
+        db_productos = db_manager.get_productos()
+        for row in db_productos:
+            productos.append(row)
+        
+        categoria = []
+        for i in range(len(productos)):
+            if productos [i][2] == tipo_producto:
+                categoria.append(productos [i])
+                
+        return render_template('dashboard/dashboard_productos.html', columnas=columnas, productos=categoria)
+    else:
+        return 'Hola'
+ 
 @app.route('/login/dashboard/empleados')
 def dashboard_empleados():
-    return render_template('dashboard/dashboard_empleados.html')
+    if request.method == 'GET':
+        columnas = []
+        busqueda_columnas = db_manager.get_columns_usuario()
+        # Agrego a columnas los nombres de las columnas buscado en bd
+        for i in busqueda_columnas:
+            columnas.append(f'{i}')
+        #Organizo la información mostrada por defecto, todos los médicos
+        empleados = []
+        db_empleados = db_manager.get_empleados()
+        for row in db_empleados:
+            empleados.append(row)
+        
+        return render_template('dashboard/dashboard_empleados.html', columnas=columnas, empleados=empleados)
+    else:
+        return 'Hola'
 
 @app.route('/login/dashboard/clientes', methods = ['GET', 'POST'])
 def dashboard_clientes():
@@ -217,7 +250,7 @@ def dashboard_clientes():
         db_clientes = db_manager.get_clientes()
         for row in db_clientes:
             clientes.append(row)
-        print(clientes)
+        
         return render_template('dashboard/dashboard_clientes.html', columnas=columnas, clientes=clientes)
     else:
         return 'Hola'
