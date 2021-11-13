@@ -177,3 +177,22 @@ def get_productos():
     cursor.execute(strsql)
     response = cursor.fetchall()
     return response
+
+#-------------------------------------LUIS------------------------------
+def obtener_info_usuario(id_usuario):
+    status = { 'error':None, 'data':None}
+    try:
+        with sqlite3.connect("orion.db") as con:
+            cur = con.cursor()
+            query=cur.execute("SELECT Cedula, Nombre_y_apellido, Fecha_de_nacimiento,Sexo, Direccion, Ciudad FROM Usuarios WHERE id_usuario=?  ",[id_usuario]).fetchone()
+            if query!=None:
+                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5]]
+                return status
+            else:
+                    
+                status['error'] = "Ocurrio un error"
+                return status
+                      
+    except Error:
+        status['error'] = "Algo salió mal "+ Error
+        return status
