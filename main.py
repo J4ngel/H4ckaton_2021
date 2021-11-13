@@ -394,7 +394,3 @@ def dashboard_clientes():
 @app.route('/login/dashboard/ventas', methods = ['GET', 'POST'])
 def dashboard_ventas():
     return render_template('dashboard/dashboard_ventas.html')
-
-
-if __name__ == '__main__':
-    app.run(debug=True, port=8000)
