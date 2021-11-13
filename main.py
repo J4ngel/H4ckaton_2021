@@ -7,10 +7,21 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from markupsafe import escape
 from flask_bootstrap import Bootstrap
 from werkzeug.security import check_password_hash, generate_password_hash
+from flask.helpers import get_env
 
 app = Flask(__name__)
 Bootstrap(app)
 app.secret_key = os.urandom(24)
+
+#---------------------------FUNCIONES UTILES JACKE--------------------------------
+def confBd():
+    if get_env() == 'development':
+        path = ''
+    elif get_env == 'production':
+        path = '/home/jackenamor/Hospital-Militar-Central/'
+    return path
+#-------------------------------------------------------------------------------
+
 
 # Jacke: Pagina principal
 @app.route('/')
@@ -160,9 +171,36 @@ def dashboard_productos():
 def dashboard_empleados():
     return render_template('dashboard/dashboard_empleados.html')
 
-@app.route('/login/dashboard/clientes')
+@app.route('/login/dashboard/clientes', methods = ['GET', 'POST'])
 def dashboard_clientes():
-    return render_template('dashboard/dashboard_clientes.html')
+    if request.method == 'GET':
+        columnas = []
+        busqueda_columnas = db_manager.get_columns_usuario()
+        # Agrego a columnas los nombres de las columnas buscado en bd
+        for i in busqueda_columnas:
+            columnas.append(f'{i}')
+        #Organizo la información mostrada por defecto, todos los médicos
+        clientes = []
+        db_clientes = db_manager.get_clientes()
+        for row in db_clientes:
+            clientes.append(row)
+        print(clientes)
+        return render_template('dashboard/dashboard_clientes.html', columnas=columnas, clientes=clientes)
+    else:
+        return 'Hola'
+      #coincidencia = []
+        '''global cedula_cliente 
+        cedula_cliente = request.form['cliente_buscado']
+        busqueda_cedula = db_manager.(cedula_a_buscar_paciente)
+        if len(busqueda_cedula)>0:
+            cond = True
+            for i in range(len(busqueda_columnas)):
+                coincidencia.append(f'{busqueda_cedula[0][i]}')
+            return render_template("administradorPaciente.html", user=user(cedula_init), coincidencia=coincidencia, columnas=columnas,cond=cond)
+        else:
+            error = f'El usuario con la identificacion {cedula_a_buscar_paciente} no se encuentra registrado '
+            return render_template("administradorPaciente.html", user=user(cedula_init), error = error)
+    return render_template('dashboard/dashboard_clientes.html')'''
 
 @app.route('/registro/empleado', methods=['GET', 'POST'])
 def registro_empleado():
