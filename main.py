@@ -37,7 +37,7 @@ def usuario():
             sexo="Masculino"
         else:
             sexo="Femenino"
-        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5])
+        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],usuario=data[6])
     else:
         return redirect('/login/dashboard')
 
@@ -45,7 +45,14 @@ def usuario():
 @app.route('/empleado')
 def empleado():
     if 'user' in session and session['rol'] == 2:
-        return render_template('usuarioInterno.html')
+        data=db_manager.obtener_info_usuario(session['id'])['data']
+        print(data)
+        if data[3] == 1:
+            sexo="Masculino"
+        else:
+            sexo="Femenino"
+        return render_template('usuarioInterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],usuario=data[6])
+        
     else:
         return redirect('/login/dashboard')
 

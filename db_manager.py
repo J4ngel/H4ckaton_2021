@@ -184,9 +184,9 @@ def obtener_info_usuario(id_usuario):
     try:
         with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            query=cur.execute("SELECT Cedula, Nombre_y_apellido, Fecha_de_nacimiento,Sexo, Direccion, Ciudad FROM Usuarios WHERE id_usuario=?  ",[id_usuario]).fetchone()
+            query=cur.execute("SELECT Cedula, Nombre_y_apellido, Fecha_de_nacimiento,Sexo, Direccion, Ciudad,username FROM Usuarios WHERE id_usuario=?  ",[id_usuario]).fetchone()
             if query!=None:
-                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5]]
+                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5],query[6]]
                 return status
             else:
                     
