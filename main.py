@@ -109,6 +109,26 @@ def logout():
         flash("Primero debe iniciar sesion")
         return redirect('/login')
 
+@app.route("/eliminar_cuenta", methods=["GET"])
+def eliminar_cuenta():
+    if 'user' in session:
+        if session['rol'] == 1 or session['rol']== 2:
+            status = db_manager.eliminar_cuenta(session['id'])
+
+            if not status['state']:
+                flash(status['error'])
+                if session['role'] == 1:
+                    return redirect('/usuario')
+                else:
+                    return redirect('/empleado')
+            else:
+                session.clear()
+                flash(status['data'])
+                return redirect('/login')
+    else:
+        flash("Primero debe iniciar sesion")
+        return redirect('/login')   
+
 @app.route('/login/recuperar_usuario', methods=['POST'])
 def recuperar_usuario():
     name = escape(request.form['name'])
