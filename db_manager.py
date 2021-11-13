@@ -54,7 +54,7 @@ def login_session(username, password):
     try:
         with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol FROM Usuarios WHERE username=?",[username]).fetchone()
+            query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?",[username]).fetchone()
             if query!=None:
                 if check_password_hash(query[0],password):
                     status['data']=query

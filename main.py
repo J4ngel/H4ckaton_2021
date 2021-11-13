@@ -31,7 +31,13 @@ def principal():
 @app.route('/usuario')
 def usuario():
     if 'user' in session and session['rol'] == 1:
-        return render_template('usuarioExterno.html')
+        data=db_manager.obtener_info_usuario(session['id'])['data']
+        print(data)
+        if data[3] == 1:
+            sexo="Masculino"
+        else:
+            sexo="Femenino"
+        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5])
     else:
         return redirect('/login/dashboard')
 
@@ -75,6 +81,7 @@ def login():
                 session['user']=username
                 session['name']=status_2['data'][1]
                 session['rol']=status_2['data'][2]
+                session['id']=status_2['data'][3]
                 print("logueo con exito")
 
                 if session['rol'] == 3:
