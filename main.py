@@ -289,8 +289,6 @@ def dashboard():
     if 'user' in session:
         if session['rol'] == 3:
             return render_template('dashboard/dashboard.html')
-        elif session['rol'] == 2:
-            return redirect('/empleado')
         else:
             return redirect('/')
     else:

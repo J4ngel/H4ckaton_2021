@@ -35,7 +35,7 @@ def reg_1(cedula, name, gender, birthday, city, adds, username,phrase, password,
             
     except Error:
         status['state'] = False
-        status['error'] = "Algo salió mal" + Error
+        status['error'] = "Algo salió mal"
         return status
 
 #----->REGISTRO DE UN USUARIO INTERNO (EMPLEADO)
@@ -55,16 +55,18 @@ def reg_2(cedula, name, job, gender, birthday, city, adds,username, phrase, pass
             
     except Error:
         status['state'] = False
-        status['error'] = "Algo salió mal" + Error
+        status['error'] = "Algo salió mal"
         return status
 
 #----->VERIFICACION DE CREDENCIALES      
 def login_session(username, password):
     status = {'state':True, 'error':None, 'data':None}
     try:
+        strsql = 'SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?', (username,)
         con=sql_connection()
-        cur = con.cursor()
-        query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?",[username]).fetchone()
+        cursor = con.cursor()
+        cursor.execute(*strsql)
+        query= cursor.fetchone()
         if query!=None:
             if check_password_hash(query[0],password):
                 status['data']=query
@@ -81,7 +83,7 @@ def login_session(username, password):
         
     except Error:
         status['state'] = False
-        status['error'] = "Algo salió mal "+ Error
+        status['error'] = "Algo salió mal"
         return status
 
 #----->DEVUELVE LA CEDULA SI LAS TRES PREGUNTAS SE RESUELVEN DE FORMA CORRECTA
@@ -107,7 +109,7 @@ def recuperar_usuario(name, birthday, phrase):
         
     except Error:
         status['state'] = False
-        status['error'] = "Algo salió mal "+ Error
+        status['error'] = "Algo salió mal"
         return status
 
 #----->ACTUALIZA LA INFORMACIÓN SI SE CUMPLIERON LAS VERIFICACIONES ANTERIORES
@@ -128,7 +130,7 @@ def recuperar_pass(password,id_usuario):
         
     except Error:
         status['state'] = False
-        status['error'] = "Algo salió mal "+ Error
+        status['error'] = "Algo salió mal"
         return status
 
 #------>ELIMINAR CUENTAS POR id_usuario
@@ -149,7 +151,7 @@ def eliminar_cuenta(id_usuario):
         
     except Error:
         status['state'] = False
-        status['error'] = "Algo salió mal "+ Error
+        status['error'] = "Algo salió mal"
         return status
 #-----------------------------Administrador-----------------------------------
 
@@ -225,5 +227,5 @@ def obtener_info_usuario(id_usuario):
                 return status
                       
     except Error:
-        status['error'] = "Algo salió mal "+ Error
+        status['error'] = "Algo salió mal"
         return status
