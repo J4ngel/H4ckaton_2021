@@ -85,6 +85,9 @@ def empity_recuperar_info(name, birthday, phrase):
     if len(name) == 0:
         status['state'] = False
         status['error'] = "El campo de nombre está vacío"
+    elif len(birthday) == 0:
+        status['state'] = False
+        status['error'] = "El campo de fecha de nacimiento está vacío"
     elif len(phrase) == 0:
         status['state'] = False
         status['error'] = "El campo de la frase de seguridad está vacío"
