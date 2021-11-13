@@ -120,6 +120,27 @@ def recuperar_pass(password,id_usuario):
         status['state'] = False
         status['error'] = "Algo salió mal "+ Error
         return status
+
+#------>ELIMINAR CUENTAS POR id_usuario
+def eliminar_cuenta(id_usuario):
+    status = {'state':True, 'error':None, 'data':None}
+    try:
+        with sqlite3.connect(ruta) as con:
+            cur = con.cursor()
+            cur.execute("DELETE FROM Usuarios WHERE id_usuario = ?",[id_usuario])
+            con.commit()
+            if con.total_changes > 0:
+                status['data']="Cuenta eliminada con exito"
+                return status
+            else:
+                status['state']=False
+                status['error']="No se pudo eliminar la cuenta"
+                return status
+        
+    except Error:
+        status['state'] = False
+        status['error'] = "Algo salió mal "+ Error
+        return status
 #-----------------------------Administrador-----------------------------------
 def sql_connection():
     try:
