@@ -28,8 +28,21 @@ def principal():
     return render_template('index.html')
 
 # Yessid: Pagina de usuario externo
-@app.route('/usuario')
+@app.route('/usuario', methods=['GET', 'POST'])
 def usuario():
+    if request.method == 'POST':
+        name = escape(request.form['name'])
+        addr = escape(request.form['addr'])
+        city = escape(request.form['city'])
+
+        status_1 = verifications.valid_update_info(name,addr,city)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/usuario')
+        
+        flash("PROCESO DE BASE DE DATOS")
+        return redirect("/usuario")
+
     if 'user' in session and session['rol'] == 1:
         data=db_manager.obtener_info_usuario(session['id'])['data']
         print(data)
@@ -37,17 +50,94 @@ def usuario():
             sexo="Masculino"
         else:
             sexo="Femenino"
-        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5])
+        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],username=data[6])
     else:
         return redirect('/login/dashboard')
 
+@app.route('/usuario/act_frase', methods=['POST'])
+def act_frase_usuario():
+    old_pass = escape(request.form['old_pass'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.valid_update_info(old_pass=old_pass, phrase=phrase)
+    
+    if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/usuario')
+        
+    flash("PROCESO DE BASE DE DATOS PARA CAMBIO DE FRASE")
+    return redirect("/usuario")
+
+@app.route('/usuario/act_pass', methods=['POST'])
+def act_pass_usuario():
+    old_pass = escape(request.form['old_pass'])
+    new_pass = escape(request.form['new_pass'])
+    check_pass = escape(request.form['check_pass'])
+
+    status_1 = verifications.valid_update_info(old_pass=old_pass,new_pass=new_pass,check_pass=check_pass)
+    
+    if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/usuario')
+        
+    flash("PROCESO DE BASE DE DATOS PARA CAMBIO DE CONTRASEÑA")
+    return redirect("/usuario")
+
 # Yessid: Pagina de usuario interno
-@app.route('/empleado')
+@app.route('/empleado', methods=['GET', 'POST'])
 def empleado():
+    if request.method == 'POST':
+        name = escape(request.form['name'])
+        addr = escape(request.form['addr'])
+        city = escape(request.form['city'])
+
+        status_1 = verifications.valid_update_info(name,addr,city)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/empleado')
+        
+        flash("PROCESO DE BASE DE DATOS")
+        return redirect("/empleado")
+
     if 'user' in session and session['rol'] == 2:
-        return render_template('usuarioInterno.html')
+        data=db_manager.obtener_info_usuario(session['id'])['data']
+        print(data)
+        if data[3] == 1:
+            sexo="Masculino"
+        else:
+            sexo="Femenino"
+        return render_template('usuarioInterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],username=data[6])
     else:
         return redirect('/login/dashboard')
+
+@app.route('/empleado/act_frase', methods=['POST'])
+def act_frase_empleado():
+    old_pass = escape(request.form['old_pass'])
+    phrase = escape(request.form['phrase'])
+
+    status_1 = verifications.valid_update_info(old_pass=old_pass, phrase=phrase)
+    
+    if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/empleado')
+        
+    flash("PROCESO DE BASE DE DATOS PARA CAMBIO DE FRASE")
+    return redirect("/empleado")
+
+@app.route('/empleado/act_pass', methods=['POST'])
+def act_pass_empleado():
+    old_pass = escape(request.form['old_pass'])
+    new_pass = escape(request.form['new_pass'])
+    check_pass = escape(request.form['check_pass'])
+
+    status_1 = verifications.valid_update_info(old_pass=old_pass,new_pass=new_pass,check_pass=check_pass)
+    
+    if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/empleado')
+        
+    flash("PROCESO DE BASE DE DATOS PARA CAMBIO DE CONTRASEÑA")
+    return redirect("/empleado")
 
 # Yessid: Pagina de productos (clientte)
 @app.route('/productos')
@@ -79,9 +169,9 @@ def login():
 
             else:
                 session['user']=username
-                session['name']=status_2['data'][1]
-                session['rol']=status_2['data'][2]
-                session['id']=status_2['data'][3]
+                session['name']=status_2['data'][0][1]
+                session['rol']=status_2['data'][0][2]
+                session['id']=status_2['data'][0][3]
                 print("logueo con exito")
 
                 if session['rol'] == 3:

@@ -66,6 +66,33 @@ def login_session(username, password):
         con=sql_connection()
         cursor = con.cursor()
         cursor.execute(*strsql)
+        query= cursor.fetchall()
+        if query!=None:
+            if check_password_hash(query[0][0],password):
+                status['data']=query
+                return status
+            else:
+                status['state'] = False
+                status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
+                return status
+                
+        else:
+            status['state'] = False
+            status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
+            return status
+        
+    except Error:
+        status['state'] = False
+        status['error'] = "Algo salió mal"
+        return status
+
+def login_session_CAMBIOS(username, password):
+    status = {'state':True, 'error':None, 'data':None}
+    try:
+        strsql = 'SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?', (username,)
+        con=sql_connection()
+        cursor = con.cursor()
+        cursor.execute(*strsql)
         query= cursor.fetchone()
         if query!=None:
             if check_password_hash(query[0],password):
@@ -85,7 +112,6 @@ def login_session(username, password):
         status['state'] = False
         status['error'] = "Algo salió mal"
         return status
-
 #----->DEVUELVE LA CEDULA SI LAS TRES PREGUNTAS SE RESUELVEN DE FORMA CORRECTA
 def recuperar_usuario(name, birthday, phrase):
     status = {'state':True, 'error':None, 'data':None}
@@ -217,9 +243,9 @@ def obtener_info_usuario(id_usuario):
     try:
         with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            query=cur.execute("SELECT Cedula, Nombre_y_apellido, Fecha_de_nacimiento,Sexo, Direccion, Ciudad FROM Usuarios WHERE id_usuario=?  ",[id_usuario]).fetchone()
+            query=cur.execute("SELECT Cedula, Nombre_y_apellido, Fecha_de_nacimiento,Sexo, Direccion, Ciudad, username FROM Usuarios WHERE id_usuario=?  ",[id_usuario]).fetchone()
             if query!=None:
-                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5]]
+                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5],query[6]]
                 return status
             else:
                     
