@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block contenido %}
+
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
     <!-- Page Heading -->
-    <h1 class="h3 mb-2 text-gray-800">Productos</h1>
+    <h1 class="h3 mb-2 text-gray-800">{{ tipo_producto }}</h1>
     <!--<p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
         For more information about DataTables, please visit the <a target="_blank"
             href="https://datatables.net">official DataTables documentation</a>.</p>-->
@@ -23,7 +24,7 @@
                     <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="post" name="producto_buscado">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-1 small" placeholder="buscar por..."
+                            <input id="input-search" type="search" class="form-control bg-light border-1 small" placeholder="buscar por..."
                                 aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
@@ -40,38 +41,28 @@
             </div>
         </div>
         <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+            
+                <div class="table-responsive">
+                <table class="table table-bordered" id="tablaProductos" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                             {% for item in columnas %}
-                            <th>{{ item }}</th>
+                            <th scope="col">{{ item }}</th>
                             {% endfor %}
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            {% for item in columnas %}
-                            <th>{{ item }}</th>
-                            {% endfor %}
-                        </tr>
-                    </tfoot>
                     <tbody>
                         {% for producto in productos %}
                         <tr>
-                            {% for  item in producto %}
+                  
+                            {% for item in producto %}
                                 <td>{{ item }}</td>
                             {% endfor %}
                         </tr>
-                        {% endfor %}
-                        <tr>
-                            {% for  item in coincidencias %}
-                                <td>{{ item }}</td> 
-                            {% endfor %}
-                        </tr>                        
+                        {% endfor %}    
                     </tbody>
                 </table>
-            </div>
+            
         </div>
     </div>
 

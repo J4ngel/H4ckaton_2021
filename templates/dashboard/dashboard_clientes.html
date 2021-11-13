@@ -41,7 +41,7 @@
         </div>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="70%" cellspacing="0">
+                <table class="table table-bordered" id="tablaClientes" width="70%" cellspacing="0">
                     <thead>
                         <tr>
                             {% for item in columnas %}
@@ -65,11 +65,13 @@
                         </tr>
                         {% endfor %}
 
-                        <tr>
+                        
                             {% for  item in coincidencias %}
-                                <td>{{ item }}</td> 
+                            <tr>
+                                <td>{{ item }}</td>
+                            </tr>
                             {% endfor %} 
-                        </tr>
+                        
                                               
                     </tbody>
                 </table>

@@ -163,50 +163,73 @@ def dashboard():
     return render_template('dashboard/dashboard.html')
 
 @app.route('/login/dashboard/productos/<tipo_producto>')
-@app.route('/login/dashboard/productos')
+@app.route('/login/dashboard/productos', methods = ['GET', 'POST'])
 def dashboard_productos(tipo_producto):
-    if request.method == 'GET':
-        columnas = []
-        busqueda_columnas = db_manager.get_columns_productos()
-        # Agrego a columnas los nombres de las columnas buscado en bd
-        for i in busqueda_columnas:
-            columnas.append(f'{i}')
-        #Organizo la información mostrada por defecto, todos los médicos
-        productos = []
-        db_productos = db_manager.get_productos()
-        for row in db_productos:
-            productos.append(row)
+    columnas = []
+    busqueda_columnas = db_manager.get_columns_productos()
+    # Agrego a columnas los nombres de las columnas buscado en bd
+    for i in busqueda_columnas:
+        columnas.append(f'{i}')
+    #Organizo la información mostrada por defecto, todos los médicos
+    productos = []
+    db_productos = db_manager.get_productos()
+    for row in db_productos:
+        productos.append(row)
         
-        categoria = []
+    categoria = []
+    if tipo_producto == 'Cereal' or tipo_producto == 'Frutos secos' or tipo_producto == 'Enlatados':
         for i in range(len(productos)):
             if productos [i][2] == tipo_producto:
                 categoria.append(productos [i])
-                
-        return render_template('dashboard/dashboard_productos.html', columnas=columnas, productos=categoria)
     else:
-        return 'Hola'
- 
-@app.route('/login/dashboard/empleados')
-def dashboard_empleados():
+        for i in range(len(productos)):
+            if productos [i][2] != 'Cereal' and productos [i][2] != 'Frutos secos' and productos [i][2] != 'Enlatados':
+                categoria.append(productos [i])
     if request.method == 'GET':
-        columnas = []
-        busqueda_columnas = db_manager.get_columns_usuario()
-        # Agrego a columnas los nombres de las columnas buscado en bd
-        for i in busqueda_columnas:
-            columnas.append(f'{i}')
-        #Organizo la información mostrada por defecto, todos los médicos
-        empleados = []
-        db_empleados = db_manager.get_empleados()
-        for row in db_empleados:
-            empleados.append(row)
-        
+        return render_template('dashboard/dashboard_productos.html', tipo_producto=tipo_producto, columnas=columnas, productos=categoria)
+    else:
+        return 'Hasta Mañana'
+        '''coincidencias = []
+        global codigo_producto 
+        codigo_producto = request.form['codigo_producto']
+        busqueda_cedula = db_manager.sql_search_user(codigo_producto)
+        if len(busqueda_cedula)>0:
+            for i in range(len(busqueda_columnas)):
+                coincidencias.append(f'{busqueda_cedula[0][i]}')
+            return render_template('dashboard/dashboard_empleados.html', coincidencias=coincidencias, columnas=columnas)
+        else:
+            error = f'El usuario con la identificacion {codigo_producto} no se encuentra registrado '
+            return render_template('dashboard/dashboard_clientes.html', error = error)'''
+ 
+@app.route('/login/dashboard/empleados', methods = ['GET', 'POST'])
+def dashboard_empleados():
+    columnas = []
+    busqueda_columnas = db_manager.get_columns_usuario()
+    # Agrego a columnas los nombres de las columnas buscado en bd
+    for i in busqueda_columnas:
+        columnas.append(f'{i}')
+    #Organizo la información mostrada por defecto, todos los médicos
+    empleados = []
+    db_empleados = db_manager.get_empleados()
+    for row in db_empleados:
+        empleados.append(row)
+    if request.method == 'GET':        
         return render_template('dashboard/dashboard_empleados.html', columnas=columnas, empleados=empleados)
     else:
-        return 'Hola'
+        coincidencias = []
+        global cedula_empleado 
+        cedula_empleado = request.form['empleado_buscado']
+        busqueda_cedula = db_manager.sql_search_user(cedula_empleado)
+        if len(busqueda_cedula)>0:
+            for i in range(len(busqueda_columnas)):
+                coincidencias.append(f'{busqueda_cedula[0][i]}')
+            return render_template('dashboard/dashboard_empleados.html', coincidencias=coincidencias, columnas=columnas)
+        else:
+            error = f'El usuario con la identificacion {cedula_empleado} no se encuentra registrado '
+            return render_template('dashboard/dashboard_clientes.html', error = error)
 
 @app.route('/login/dashboard/clientes', methods = ['GET', 'POST'])
 def dashboard_clientes():
-    if request.method == 'GET':
         columnas = []
         busqueda_columnas = db_manager.get_columns_usuario()
         # Agrego a columnas los nombres de las columnas buscado en bd
@@ -218,22 +241,23 @@ def dashboard_clientes():
         for row in db_clientes:
             clientes.append(row)
         
-        return render_template('dashboard/dashboard_clientes.html', columnas=columnas, clientes=clientes)
-    else:
-        return 'Hola'
-      #coincidencia = []
-        '''global cedula_cliente 
-        cedula_cliente = request.form['cliente_buscado']
-        busqueda_cedula = db_manager.(cedula_a_buscar_paciente)
-        if len(busqueda_cedula)>0:
-            cond = True
-            for i in range(len(busqueda_columnas)):
-                coincidencia.append(f'{busqueda_cedula[0][i]}')
-            return render_template("administradorPaciente.html", user=user(cedula_init), coincidencia=coincidencia, columnas=columnas,cond=cond)
+        if request.method == 'GET':
+            return render_template('dashboard/dashboard_clientes.html', columnas=columnas, clientes=clientes)
         else:
-            error = f'El usuario con la identificacion {cedula_a_buscar_paciente} no se encuentra registrado '
-            return render_template("administradorPaciente.html", user=user(cedula_init), error = error)
-    return render_template('dashboard/dashboard_clientes.html')'''
+            coincidencias = []
+            global cedula_empleado 
+            cedula_empleado = request.form['cliente_buscado']
+            print(cedula_empleado)
+            busqueda_cedula = db_manager.sql_search_user(cedula_empleado)
+            print(busqueda_cedula)
+            if len(busqueda_cedula)>0:
+                for i in range(len(busqueda_columnas)):
+                    coincidencias.append(f'{busqueda_cedula[0][i]}')
+                return render_template('dashboard/dashboard_clientes.html', coincidencias=coincidencias, columnas=columnas)
+            else:
+                error = f'El usuario con la identificacion {cedula_empleado} no se encuentra registrado '
+                return render_template('dashboard/dashboard_clientes.html', error = error)
+        
 
 @app.route('/registro/empleado', methods=['GET', 'POST'])
 def registro_empleado():

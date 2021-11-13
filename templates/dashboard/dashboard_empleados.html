@@ -21,12 +21,12 @@
                 <div class="d-grid gap-2 d-md-block">
                     <!-- bar Search -->
                     <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="post" name="empleado_buscado">
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="POST">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-1 small" placeholder="buscar por..."
-                                aria-label="Search" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control bg-light border-1 small" placeholder="cedula"
+                                aria-label="Search" aria-describedby="basic-addon2" name="empleado_buscado">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="submit" onclick="location='/login/dashboard/empleados'">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
@@ -40,8 +40,12 @@
             </div>
         </div>
         <div class="card-body">
+            <div class="error">
+                <h2>{{ error }}</h2>
+            </div>
             <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tablaEmpleados" width="100%" cellspacing="0">
+                    
                     <thead>
                         <tr>
                             {% for item in columnas %}
@@ -49,13 +53,7 @@
                             {% endfor %}
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            {% for item in columnas %}
-                            <th>{{ item }}</th>
-                            {% endfor %}
-                        </tr>
-                    </tfoot>
+                    
                     <tbody>
                         {% for user in empleados %}
                         <tr>
@@ -64,15 +62,17 @@
                             {% endfor %}
                         </tr>
                         {% endfor %}
-                        <tr>
+                        
                             {% for  item in coincidencias %}
+                            <tr>
                                 <td>{{ item }}</td> 
+                            </tr>
                             {% endfor %}
-                        </tr>
+                        
                         
                     </tbody>
                 </table>
-            </div>
+            
         </div>
     </div>
 
