@@ -144,7 +144,7 @@
         <li class="nav-item">
           <a
             class="nav-link collapsed"
-            href="#"
+            href="{{ url_for('dashboard_ventas') }}"
             data-toggle="collapse"
             data-target="#collapsePages"
             aria-expanded="true"
@@ -161,17 +161,17 @@
           >
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Login Screens:</h6>
-              <a class="collapse-item" href="login.html">Información de Lote</a>
-              <a class="collapse-item" href="register.html"
+              <a class="collapse-item" href="{{ url_for('dashboard_ventas') }}">Información de Lote</a>
+              <a class="collapse-item" href="{{ url_for('dashboard_ventas') }}"
                 >Productos Agotados</a
               >
-              <a class="collapse-item" href="forgot-password.html"
+              <a class="collapse-item" href="{{ url_for('dashboard_ventas') }}"
                 >Productos menos vendidos</a
               >
               <div class="collapse-divider"></div>
               <h6 class="collapse-header">Other Pages:</h6>
-              <a class="collapse-item" href="404.html">404 Page</a>
-              <a class="collapse-item" href="blank.html">Blank Page</a>
+              <a class="collapse-item" href="{{ url_for('dashboard_ventas' )}}">404 Page</a>
+              <a class="collapse-item" href="{{ url_for('dashboard_ventas')}}">Blank Page</a>
             </div>
           </div>
         </li>

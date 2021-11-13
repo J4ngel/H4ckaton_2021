@@ -37,7 +37,7 @@ def usuario():
             sexo="Masculino"
         else:
             sexo="Femenino"
-        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],usuario=data[6])
+        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5])
     else:
         return redirect('/login/dashboard')
 
@@ -45,14 +45,7 @@ def usuario():
 @app.route('/empleado')
 def empleado():
     if 'user' in session and session['rol'] == 2:
-        data=db_manager.obtener_info_usuario(session['id'])['data']
-        print(data)
-        if data[3] == 1:
-            sexo="Masculino"
-        else:
-            sexo="Femenino"
-        return render_template('usuarioInterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],usuario=data[6])
-        
+        return render_template('usuarioInterno.html')
     else:
         return redirect('/login/dashboard')
 
@@ -135,6 +128,26 @@ def logout():
     else:
         flash("Primero debe iniciar sesion")
         return redirect('/login')
+
+@app.route("/eliminar_cuenta", methods=["GET"])
+def eliminar_cuenta():
+    if 'user' in session:
+        if session['rol'] == 1 or session['rol']== 2:
+            status = db_manager.eliminar_cuenta(session['id'])
+
+            if not status['state']:
+                flash(status['error'])
+                if session['role'] == 1:
+                    return redirect('/usuario')
+                else:
+                    return redirect('/empleado')
+            else:
+                session.clear()
+                flash(status['data'])
+                return redirect('/login')
+    else:
+        flash("Primero debe iniciar sesion")
+        return redirect('/login')   
 
 @app.route('/login/recuperar_usuario', methods=['POST'])
 def recuperar_usuario():
@@ -303,7 +316,7 @@ def dashboard():
     else:
         return redirect('/')
 
-@app.route('/login/dashboard/productos/<tipo_producto>')
+@app.route('/login/dashboard/productos/<tipo_producto>', methods = ['GET', 'POST'])
 @app.route('/login/dashboard/productos', methods = ['GET', 'POST'])
 def dashboard_productos(tipo_producto):
     columnas = []
@@ -329,18 +342,17 @@ def dashboard_productos(tipo_producto):
     if request.method == 'GET':
         return render_template('dashboard/dashboard_productos.html', tipo_producto=tipo_producto, columnas=columnas, productos=categoria)
     else:
-        return 'Hasta Mañana'
-        '''coincidencias = []
+        coincidencias = []
         global codigo_producto 
         codigo_producto = request.form['codigo_producto']
-        busqueda_cedula = db_manager.sql_search_user(codigo_producto)
-        if len(busqueda_cedula)>0:
+        busqueda_codigo = db_manager.sql_search_product(codigo_producto)
+        if len(busqueda_codigo)>0:
             for i in range(len(busqueda_columnas)):
-                coincidencias.append(f'{busqueda_cedula[0][i]}')
-            return render_template('dashboard/dashboard_empleados.html', coincidencias=coincidencias, columnas=columnas)
+                coincidencias.append(f'{busqueda_codigo[0][i]}')
+            return render_template('dashboard/dashboard_productos.html', coincidencias=coincidencias, columnas=columnas)
         else:
-            error = f'El usuario con la identificacion {codigo_producto} no se encuentra registrado '
-            return render_template('dashboard/dashboard_clientes.html', error = error)'''
+            error = f'El producto con la identificacion {codigo_producto} no se encuentra registrado '
+            return render_template('dashboard/dashboard_productos.html', error = error)
  
 @app.route('/login/dashboard/empleados', methods = ['GET', 'POST'])
 def dashboard_empleados():
@@ -398,7 +410,11 @@ def dashboard_clientes():
             else:
                 error = f'El usuario con la identificacion {cedula_empleado} no se encuentra registrado '
                 return render_template('dashboard/dashboard_clientes.html', error = error)
-        
+
+@app.route('/login/dashboard/ventas', methods = ['GET', 'POST'])
+def dashboard_ventas():
+    return render_template('dashboard/dashboard_ventas.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

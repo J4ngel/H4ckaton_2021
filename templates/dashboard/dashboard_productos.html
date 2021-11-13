@@ -22,12 +22,12 @@
                 <div class="d-grid gap-2 d-md-block">
                     <!-- bar Search -->
                     <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="post" name="producto_buscado">
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" method="post">
                         <div class="input-group">
                             <input id="input-search" type="search" class="form-control bg-light border-1 small" placeholder="buscar por..."
-                                aria-label="Search" aria-describedby="basic-addon2">
+                                aria-label="Search" aria-describedby="basic-addon2" name="codigo_producto">
                             <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
+                                <button class="btn btn-primary" type="submit" onclick="location='/login/dashboard/productos'">
                                     <i class="fas fa-search fa-sm"></i>
                                 </button>
                             </div>
@@ -59,7 +59,14 @@
                                 <td>{{ item }}</td>
                             {% endfor %}
                         </tr>
-                        {% endfor %}    
+                        {% endfor %}
+                        
+                        <tr>
+                            {% for  item in coincidencias %}
+                            <td>{{ item }}</td>
+                            {% endfor %} 
+                        </tr>
+                            
                     </tbody>
                 </table>
             
