@@ -7,7 +7,7 @@ from werkzeug.security import check_password_hash
 from flask import g
 import main
 
-
+ruta = main.confBd()+"orion.db"
 #----->REGISTRO DE UN USUARIO EXTERNO (CLIENTE)
 def reg_1(cedula, name, gender, birthday, city, adds, username,phrase, password, rol):
     status={'state':True, 'error':None}
