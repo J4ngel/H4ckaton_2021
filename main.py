@@ -306,22 +306,5 @@ def registro_empleado():
     else:
         return render_template('registro_empleado.html')
 
-# Jacke: Pagina de administrador
-@app.route('/login/dashboard')
-def dashboard():
-    return render_template('dashboard/dashboard.html')
-
-@app.route('/login/dashboard/productos')
-def dashboard_productos():
-    return render_template('dashboard/dashboard_productos.html')
-
-@app.route('/login/dashboard/empleados')
-def dashboard_empleados():
-    return render_template('dashboard/dashboard_empleados.html')
-
-@app.route('/login/dashboard/clientes')
-def dashboard_clientes():
-    return render_template('dashboard/dashboard_clientes.html')
-
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
