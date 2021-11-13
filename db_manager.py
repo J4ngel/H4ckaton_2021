@@ -12,7 +12,7 @@ ruta = main.confBd()+"orion.db"
 def reg_1(cedula, name, gender, birthday, city, adds, username,phrase, password, rol):
     status={'state':True, 'error':None}
     try:
-        with sqlite3.connect(ruta) as con:
+        with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
             cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase, username) VALUES (?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password, rol,phrase,username))
             con.commit()
@@ -32,7 +32,7 @@ def reg_1(cedula, name, gender, birthday, city, adds, username,phrase, password,
 def reg_2(cedula, name, job, gender, birthday, city, adds,username, phrase, password, rol):
     status={'state':True, 'error':None}
     try:
-        with sqlite3.connect(ruta) as con:
+        with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
             cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase,Cargo,username) VALUES (?,?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password,rol,phrase,job,username))
             con.commit()
@@ -52,7 +52,7 @@ def reg_2(cedula, name, job, gender, birthday, city, adds,username, phrase, pass
 def login_session(username, password):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect(ruta) as con:
+        with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
             query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?",[username]).fetchone()
             if query!=None:
@@ -78,7 +78,7 @@ def login_session(username, password):
 def recuperar_usuario(name, birthday, phrase):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect(ruta) as con:
+        with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
             query=cur.execute("SELECT username, frase, id_usuario FROM Usuarios WHERE Nombre_y_apellido=? AND Fecha_de_nacimiento=?",[name,birthday]).fetchone()
             if query!=None:
@@ -104,7 +104,7 @@ def recuperar_usuario(name, birthday, phrase):
 def recuperar_pass(password,id_usuario):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect(ruta) as con:
+        with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
             cur.execute("UPDATE Usuarios SET Contrasena=? WHERE id_usuario=?",[password,id_usuario])
             con.commit()
@@ -175,6 +175,14 @@ def sql_search_user(cedula):
     response = cursor.fetchall()
     return response
 
+def sql_search_product(codigo):
+    strsql = 'select * from Productos where Codigo_del_producto = ?', (codigo,)
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(*strsql)
+    response = cursor.fetchall()
+    return response
+
 def get_clientes():
     strsql = 'select * from Usuarios where rol = ?',('1',)
     con =sql_connection()
@@ -203,11 +211,11 @@ def get_productos():
 def obtener_info_usuario(id_usuario):
     status = { 'error':None, 'data':None}
     try:
-        with sqlite3.connect(ruta) as con:
+        with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            query=cur.execute("SELECT Cedula, Nombre_y_apellido, Fecha_de_nacimiento,Sexo, Direccion, Ciudad,username FROM Usuarios WHERE id_usuario=?  ",[id_usuario]).fetchone()
+            query=cur.execute("SELECT Cedula, Nombre_y_apellido, Fecha_de_nacimiento,Sexo, Direccion, Ciudad FROM Usuarios WHERE id_usuario=?  ",[id_usuario]).fetchone()
             if query!=None:
-                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5],query[6]]
+                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5]]
                 return status
             else:
                     
