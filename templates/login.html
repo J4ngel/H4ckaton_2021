@@ -27,9 +27,8 @@
             </div>
 
             <div class="mb-3">
-                <label for="id_field" class="form-label">Cedula</label>
-                <input type="text" class="form-control" placeholder="Digite unicamente números" id="id_field" name="cedula">
-                <div id="info" class="form-text">No compartiremos tu cedula con nadie mas</div>
+                <label for="id_field" class="form-label">User Name</label>
+                <input type="text" class="form-control" placeholder="Digite su nombre de usuario" id="id_field" name="username">
             </div>
             <div class="mb-3">
                 <label for="password_field" class="form-label">Contraseña</label>
@@ -38,7 +37,7 @@
 
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Entrar</button>
-                <button type="button" class="btn btn-primary">Registrarse</button>
+                <a href="{{url_for('registrarse')}}"><button type="button" class="btn btn-primary">Registrarse</button></a>
             </div>
 
             <div class="accordion accordion-flush" id="recuperar_info">

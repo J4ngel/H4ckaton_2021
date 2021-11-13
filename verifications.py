@@ -9,7 +9,7 @@ def valid_pass(password):
         return False
 
 #-----> VALIDACIÓN DE DATOS PARA UN USUARIO EXTERNO (CLIENTE)
-def valid_reg_1(cedula, name, gender, birthday, city, adds, phrase, password, check_pass, conditions):
+def valid_reg_1(cedula, name, gender, birthday, city, adds, username, phrase, password, check_pass, conditions):
     status = {'state':True, 'error': None}
     if conditions == 'None':
         status['state'] = False
@@ -17,7 +17,7 @@ def valid_reg_1(cedula, name, gender, birthday, city, adds, phrase, password, ch
         return status
     
     else:
-        if len(cedula) == 0 or len(name) == 0 or len(gender) == 0 or len(city) == 0 or len(adds) == 0 or len(phrase) == 0 or len(password) == 0 or len(check_pass) == 0:
+        if len(cedula) == 0 or len(name) == 0 or gender == "0" or len(birthday) == 0 or len(city) == 0 or len(adds) == 0 or len(username) == 0 or len(phrase) == 0 or len(password) == 0 or len(check_pass) == 0:
             status['state'] = False
             status['error'] = "Algunos campos estan vacíos, verifiquelos y trate de nuevo"
             return status
@@ -38,7 +38,7 @@ def valid_reg_1(cedula, name, gender, birthday, city, adds, phrase, password, ch
                     return status
 
 #-----> VALIDACIÓN DE DATOS PARA UN USUARIO INTERNO (EMPLEADO)
-def valid_reg_2(cedula, name, job, gender, birthday, city, adds, phrase, password, check_pass, conditions):
+def valid_reg_2(cedula, name, job, gender, birthday, city, adds, username, phrase, password, check_pass, conditions):
     status = {'state':True, 'error': None}
     if conditions == 'None':
         status['state'] = False
@@ -46,7 +46,7 @@ def valid_reg_2(cedula, name, job, gender, birthday, city, adds, phrase, passwor
         return status
     
     else:
-        if len(cedula) == 0 or len(name) == 0 or len(job) == 0 or len(gender) == 0 or len(city) == 0 or len(adds) == 0 or len(phrase) == 0 or len(password) == 0 or len(check_pass) == 0:
+        if len(cedula) == 0 or len(name) == 0 or len(job) == 0 or gender == "0" or len(birthday) == 0 or len(city) == 0 or len(adds) == 0 or len(username) == 0 or len(phrase) == 0 or len(password) == 0 or len(check_pass) == 0:
             status['state'] = False
             status['error'] = "Algunos campos estan vacíos, verifiquelos y trate de nuevo"
             return status
@@ -67,10 +67,10 @@ def valid_reg_2(cedula, name, job, gender, birthday, city, adds, phrase, passwor
                     return status
 
 #-----> VALIDACION CAJAS DE TEXTO LOGIN (CEDULA Y CONTRASEÑA)
-def empity_login(cedula, password):
+def empity_login(username, password):
     status = {'state':True, 'error':None}
 
-    if len(cedula) == 0:
+    if len(username) == 0:
         status['state'] = False
         status['error'] = "El campo de la cedula está vacío"
     elif len(password) == 0:
@@ -89,3 +89,23 @@ def empity_recuperar_info(name, birthday, phrase):
         status['state'] = False
         status['error'] = "El campo de la frase de seguridad está vacío"
     return status
+
+def valid_recuperar_pass(password,check_pass):
+    status = {'state':True, 'error': None}
+    if len(password) == 0 or len(check_pass) == 0:
+        status['state'] = False
+        status['error'] = "Algunos campos estan vacíos, verifiquelos y trate de nuevo"
+        return status
+    else:
+        if not valid_pass(password):
+                status['state'] = False
+                status['error'] = "La contraseña debe contener minimo 8 caracteres, entre ellos: numeros, letras (mayus y min) y un caracter especial"
+                return status
+
+        else:
+            if password != check_pass:
+                status['state'] = False
+                status['error'] = "Las contraseñas no coinciden"
+                return status
+            else:
+                return status
