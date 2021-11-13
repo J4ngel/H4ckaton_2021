@@ -276,7 +276,7 @@ def dashboard():
     else:
         return redirect('/')
 
-@app.route('/login/dashboard/productos/<tipo_producto>')
+@app.route('/login/dashboard/productos/<tipo_producto>', methods = ['GET', 'POST'])
 @app.route('/login/dashboard/productos', methods = ['GET', 'POST'])
 def dashboard_productos(tipo_producto):
     columnas = []
@@ -302,18 +302,17 @@ def dashboard_productos(tipo_producto):
     if request.method == 'GET':
         return render_template('dashboard/dashboard_productos.html', tipo_producto=tipo_producto, columnas=columnas, productos=categoria)
     else:
-        return 'Hasta Mañana'
-        '''coincidencias = []
+        coincidencias = []
         global codigo_producto 
         codigo_producto = request.form['codigo_producto']
-        busqueda_cedula = db_manager.sql_search_user(codigo_producto)
-        if len(busqueda_cedula)>0:
+        busqueda_codigo = db_manager.sql_search_product(codigo_producto)
+        if len(busqueda_codigo)>0:
             for i in range(len(busqueda_columnas)):
-                coincidencias.append(f'{busqueda_cedula[0][i]}')
-            return render_template('dashboard/dashboard_empleados.html', coincidencias=coincidencias, columnas=columnas)
+                coincidencias.append(f'{busqueda_codigo[0][i]}')
+            return render_template('dashboard/dashboard_productos.html', coincidencias=coincidencias, columnas=columnas)
         else:
-            error = f'El usuario con la identificacion {codigo_producto} no se encuentra registrado '
-            return render_template('dashboard/dashboard_clientes.html', error = error)'''
+            error = f'El producto con la identificacion {codigo_producto} no se encuentra registrado '
+            return render_template('dashboard/dashboard_productos.html', error = error)
  
 @app.route('/login/dashboard/empleados', methods = ['GET', 'POST'])
 def dashboard_empleados():
@@ -371,7 +370,11 @@ def dashboard_clientes():
             else:
                 error = f'El usuario con la identificacion {cedula_empleado} no se encuentra registrado '
                 return render_template('dashboard/dashboard_clientes.html', error = error)
-        
+
+@app.route('/login/dashboard/ventas', methods = ['GET', 'POST'])
+def dashboard_ventas():
+    return render_template('dashboard/dashboard_ventas.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)

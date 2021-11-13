@@ -154,6 +154,14 @@ def sql_search_user(cedula):
     response = cursor.fetchall()
     return response
 
+def sql_search_product(codigo):
+    strsql = 'select * from Productos where Codigo_del_producto = ?', (codigo,)
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(*strsql)
+    response = cursor.fetchall()
+    return response
+
 def get_clientes():
     strsql = 'select * from Usuarios where rol = ?',('1',)
     con =sql_connection()
