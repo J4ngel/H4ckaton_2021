@@ -4,6 +4,10 @@ from sqlite3 import Error
 import hashlib
 from werkzeug.security import check_password_hash
 
+from flask import g
+import main
+
+
 #----->REGISTRO DE UN USUARIO EXTERNO (CLIENTE)
 def reg_1(cedula, name, gender, birthday, city, adds, phrase, password, rol):
     status={'state':True, 'error':None}
@@ -116,3 +120,36 @@ def recuperar_pass(password,id_usuario):
         status['state'] = False
         status['error'] = "Algo salió mal "+ Error
         return status
+#-----------------------------Administrador-----------------------------------
+def sql_connection():
+    try:
+        if 'con' not in g:
+            path = main.confBd()
+            g.con = sqlite3.connect(path + "orion.db")
+        return g.con
+    except Error:
+        print(Error)
+
+def get_columns_usuario():
+    strsql = 'select * from Usuarios'
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(strsql)
+    names = list(map(lambda x: x[0], cursor.description))
+    return names
+
+def sql_search_user(cedula):
+    strsql = 'select * from Usuarios where Cedula = ?', (cedula,)
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(*strsql)
+    response = cursor.fetchall()
+    return response
+
+def get_clientes():
+    strsql = 'select * from Usuarios where rol = ?',('1',)
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(*strsql)
+    response = cursor.fetchall()
+    return response
