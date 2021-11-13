@@ -72,16 +72,15 @@ def login():
             redirect('/login')
         else:
             status_2 = db_manager.login_session(username,password)
-
             if not status_2['state']:
                 flash(status_2['error'])
                 return redirect('/login')
 
             else:
                 session['user']=username
-                session['name']=status_2['data'][1]
-                session['rol']=status_2['data'][2]
-                session['id']=status_2['data'][3]
+                session['name']=status_2['data'][0][1]
+                session['rol']=status_2['data'][0][2]
+                session['id']=status_2['data'][0][3]
                 print("logueo con exito")
 
                 if session['rol'] == 3:

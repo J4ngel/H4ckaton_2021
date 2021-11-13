@@ -66,9 +66,9 @@ def login_session(username, password):
         con=sql_connection()
         cursor = con.cursor()
         cursor.execute(*strsql)
-        query= cursor.fetchone()
+        query = cursor.fetchall()
         if query!=None:
-            if check_password_hash(query[0],password):
+            if check_password_hash(query[0][0],password):
                 status['data']=query
                 return status
             else:
