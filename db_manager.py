@@ -7,21 +7,31 @@ from werkzeug.security import check_password_hash
 from flask import g
 import main
 
-ruta = main.confBd()+"orion.db"
+#------>CONEXIÓN A LA BASE DE DATOS
+def sql_connection():
+    try:
+        if 'con' not in g:
+            path = main.confBd()
+            g.con = sqlite3.connect(path + "orion.db")
+        return g.con
+    except Error:
+        print(Error)
+
 #----->REGISTRO DE UN USUARIO EXTERNO (CLIENTE)
 def reg_1(cedula, name, gender, birthday, city, adds, username,phrase, password, rol):
     status={'state':True, 'error':None}
+    
     try:
-        with sqlite3.connect("orion.db") as con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase, username) VALUES (?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password, rol,phrase,username))
-            con.commit()
-            if con.total_changes > 0:
-                return status
-            else:
-                status['state']=False
-                status['error']="No se pudo registrar el usuario"
-                return status
+        con=sql_connection()
+        cur = con.cursor()
+        cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase, username) VALUES (?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password, rol,phrase,username))
+        con.commit()
+        if con.total_changes > 0:
+            return status
+        else:
+            status['state']=False
+            status['error']="No se pudo registrar el usuario"
+            return status
             
     except Error:
         status['state'] = False
@@ -32,16 +42,16 @@ def reg_1(cedula, name, gender, birthday, city, adds, username,phrase, password,
 def reg_2(cedula, name, job, gender, birthday, city, adds,username, phrase, password, rol):
     status={'state':True, 'error':None}
     try:
-        with sqlite3.connect("orion.db") as con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase,Cargo,username) VALUES (?,?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password,rol,phrase,job,username))
-            con.commit()
-            if con.total_changes > 0:
-                return status
-            else:
-                status['state']=False
-                status['error']="No se pudo registrar el empleado"
-                return status
+        con=sql_connection()
+        cur = con.cursor()
+        cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase,Cargo,username) VALUES (?,?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password,rol,phrase,job,username))
+        con.commit()
+        if con.total_changes > 0:
+            return status
+        else:
+            status['state']=False
+            status['error']="No se pudo registrar el empleado"
+            return status
             
     except Error:
         status['state'] = False
@@ -52,22 +62,22 @@ def reg_2(cedula, name, job, gender, birthday, city, adds,username, phrase, pass
 def login_session(username, password):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect("orion.db") as con:
-            cur = con.cursor()
-            query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?",[username]).fetchone()
-            if query!=None:
-                if check_password_hash(query[0],password):
-                    status['data']=query
-                    return status
-                else:
-                    status['state'] = False
-                    status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
-                    return status
-                    
+        con=sql_connection()
+        cur = con.cursor()
+        query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?",[username]).fetchone()
+        if query!=None:
+            if check_password_hash(query[0],password):
+                status['data']=query
+                return status
             else:
                 status['state'] = False
                 status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
                 return status
+                
+        else:
+            status['state'] = False
+            status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
+            return status
         
     except Error:
         status['state'] = False
@@ -78,22 +88,22 @@ def login_session(username, password):
 def recuperar_usuario(name, birthday, phrase):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect("orion.db") as con:
-            cur = con.cursor()
-            query=cur.execute("SELECT username, frase, id_usuario FROM Usuarios WHERE Nombre_y_apellido=? AND Fecha_de_nacimiento=?",[name,birthday]).fetchone()
-            if query!=None:
-                if check_password_hash(query[1],phrase):
-                    status['data']= [query[0],query[2]]
-                    return status
-                else:
-                    status['state'] = False
-                    status['error'] = "Verificación de datos erronea, intente nuevamente"
-                    return status
-                    
+        con=sql_connection()
+        cur = con.cursor()
+        query=cur.execute("SELECT username, frase, id_usuario FROM Usuarios WHERE Nombre_y_apellido=? AND Fecha_de_nacimiento=?",[name,birthday]).fetchone()
+        if query!=None:
+            if check_password_hash(query[1],phrase):
+                status['data']= [query[0],query[2]]
+                return status
             else:
                 status['state'] = False
                 status['error'] = "Verificación de datos erronea, intente nuevamente"
                 return status
+                
+        else:
+            status['state'] = False
+            status['error'] = "Verificación de datos erronea, intente nuevamente"
+            return status
         
     except Error:
         status['state'] = False
@@ -104,17 +114,17 @@ def recuperar_usuario(name, birthday, phrase):
 def recuperar_pass(password,id_usuario):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect("orion.db") as con:
-            cur = con.cursor()
-            cur.execute("UPDATE Usuarios SET Contrasena=? WHERE id_usuario=?",[password,id_usuario])
-            con.commit()
-            if con.total_changes > 0:
-                status['data']="Contraseña actualizada con exito"
-                return status
-            else:
-                status['state']=False
-                status['error']="No se pudo actualizar la contraseña"
-                return status
+        con=sql_connection()
+        cur = con.cursor()
+        cur.execute("UPDATE Usuarios SET Contrasena=? WHERE id_usuario=?",[password,id_usuario])
+        con.commit()
+        if con.total_changes > 0:
+            status['data']="Contraseña actualizada con exito"
+            return status
+        else:
+            status['state']=False
+            status['error']="No se pudo actualizar la contraseña"
+            return status
         
     except Error:
         status['state'] = False
@@ -125,31 +135,23 @@ def recuperar_pass(password,id_usuario):
 def eliminar_cuenta(id_usuario):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        with sqlite3.connect(ruta) as con:
-            cur = con.cursor()
-            cur.execute("DELETE FROM Usuarios WHERE id_usuario = ?",[id_usuario])
-            con.commit()
-            if con.total_changes > 0:
-                status['data']="Cuenta eliminada con exito"
-                return status
-            else:
-                status['state']=False
-                status['error']="No se pudo eliminar la cuenta"
-                return status
+        con=sql_connection()
+        cur = con.cursor()
+        cur.execute("DELETE FROM Usuarios WHERE id_usuario = ?",[id_usuario])
+        con.commit()
+        if con.total_changes > 0:
+            status['data']="Cuenta eliminada con exito"
+            return status
+        else:
+            status['state']=False
+            status['error']="No se pudo eliminar la cuenta"
+            return status
         
     except Error:
         status['state'] = False
         status['error'] = "Algo salió mal "+ Error
         return status
 #-----------------------------Administrador-----------------------------------
-def sql_connection():
-    try:
-        if 'con' not in g:
-            path = main.confBd()
-            g.con = sqlite3.connect(path + "orion.db")
-        return g.con
-    except Error:
-        print(Error)
 
 def get_columns_usuario():
     strsql = 'select * from Usuarios'

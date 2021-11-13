@@ -72,7 +72,7 @@ def empity_login(username, password):
 
     if len(username) == 0:
         status['state'] = False
-        status['error'] = "El campo de la cedula está vacío"
+        status['error'] = "El campo Nombre de usuario está vacío"
     elif len(password) == 0:
         status['state'] = False
         status['error'] = "El campo de la contraseña está vacío"
