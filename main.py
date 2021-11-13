@@ -30,12 +30,18 @@ def principal():
 # Yessid: Pagina de usuario externo
 @app.route('/usuario')
 def usuario():
-    return render_template('usuarioExterno.html')
+    if 'user' in session and session['rol'] == 1:
+        return render_template('usuarioExterno.html')
+    else:
+        return redirect('/login/dashboard')
 
 # Yessid: Pagina de usuario interno
 @app.route('/empleado')
 def empleado():
-    return render_template('usuarioInterno.html')
+    if 'user' in session and session['rol'] == 2:
+        return render_template('usuarioInterno.html')
+    else:
+        return redirect('/login/dashboard')
 
 # Yessid: Pagina de productos (clientte)
 @app.route('/productos')
@@ -50,23 +56,23 @@ def precios():
 @app.route('/login', methods=['GET','POST'])
 def login():
     if request.method == 'POST':
-        cedula = escape(request.form['cedula'])
+        username = escape(request.form['username'])
         password = escape(request.form['password'])
         
-        status_1 = verifications.empity_login(cedula,password)
+        status_1 = verifications.empity_login(username,password)
 
         if not status_1['state']:
             flash(status_1['error'])
             redirect('/login')
         else:
-            status_2 = db_manager.login_session(cedula,password)
+            status_2 = db_manager.login_session(username,password)
 
             if not status_2['state']:
                 flash(status_2['error'])
                 return redirect('/login')
 
             else:
-                session['user']=cedula
+                session['user']=username
                 session['name']=status_2['data'][1]
                 session['rol']=status_2['data'][2]
                 print("logueo con exito")
@@ -162,6 +168,7 @@ def recuperar_pass():
         return redirect('/login')
 
 @app.route('/registrarse', methods=['GET','POST'])
+@app.route('/registro/usuario', methods=['GET','POST'])
 def registrarse():
     if request.method == 'POST':
         cedula      = escape(request.form['cedula'])
@@ -170,13 +177,14 @@ def registrarse():
         birthday     = escape(request.form['birthday'])
         city        = escape(request.form['city'])
         adds        = escape(request.form['adds'])
+        username        = escape(request.form['username'])
         phrase      = escape(request.form['phrase'])
         password    = escape(request.form['password'])
         check_pass  = escape(request.form['check_pass'])
         conditions  = escape(request.form.get('conditions'))
-        rol = 1  # 1 -> usuario externo / 2 -> usuario externo / 3 -> usuario externo   
+        rol = 1  # 1 -> usuario externo / 2 -> usuario interno / 3 -> Admin   
 
-        status_1 = verifications.valid_reg_1(cedula,name,gender,birthday,city,adds,phrase,password,check_pass,conditions)
+        status_1 = verifications.valid_reg_1(cedula,name,gender,birthday,city,adds,phrase,username,password,check_pass,conditions)
         if not status_1['state']:
             flash(status_1['error'])
             return redirect('/registrarse')
@@ -184,7 +192,7 @@ def registrarse():
             hash_pass = generate_password_hash(password)
             hash_phrase = generate_password_hash(phrase)
 
-            status_2 = db_manager.reg_1(cedula,name,gender,birthday,city,adds,hash_phrase,hash_pass,rol)           
+            status_2 = db_manager.reg_1(cedula,name,gender,birthday,city,adds, username,hash_phrase,hash_pass,rol)           
             
             if not status_2['state']:
                 flash(status_2['error'])
@@ -211,13 +219,14 @@ def registro_empleado():
         birthday     = escape(request.form['birthday'])
         city        = escape(request.form['city'])
         adds        = escape(request.form['adds'])
+        username        = escape(request.form['username'])
         phrase      = escape(request.form['phrase'])
         password    = escape(request.form['password'])
         check_pass  = escape(request.form['check_pass'])
         conditions  = escape(request.form.get('conditions'))
         rol = 2  # 1 -> usuario externo / 2 -> usuario interno / 3 -> admin  
 
-        status_1 = verifications.valid_reg_2(cedula,name,job,gender,birthday,city,adds,phrase,password,check_pass,conditions)
+        status_1 = verifications.valid_reg_2(cedula,name,job,gender,birthday,city,adds,username,phrase,password,check_pass,conditions)
         if not status_1['state']:
             flash(status_1['error'])
             return redirect('/registro/empleado')
@@ -225,8 +234,8 @@ def registro_empleado():
             hash_pass = generate_password_hash(password)
             hash_phrase = generate_password_hash(phrase)
 
-            #status_2 = db_manager.reg_2(cedula,name,job,gender,birthday,city,adds,hash_phrase,hash_pass,rol)
-            status_2 = {'state':True} #Linea SOLO PARA PRUEBAS
+            status_2 = db_manager.reg_2(cedula,name,job,gender,birthday,city,adds,username,hash_phrase,hash_pass,rol)
+        
             if not status_2['state']:
                 flash(status_2['error'])
                 return redirect('/registro/empleado')

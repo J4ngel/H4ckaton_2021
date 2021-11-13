@@ -9,12 +9,12 @@ import main
 
 
 #----->REGISTRO DE UN USUARIO EXTERNO (CLIENTE)
-def reg_1(cedula, name, gender, birthday, city, adds, phrase, password, rol):
+def reg_1(cedula, name, gender, birthday, city, adds, username,phrase, password, rol):
     status={'state':True, 'error':None}
     try:
         with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase) VALUES (?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password, rol,phrase))
+            cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase, username) VALUES (?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password, rol,phrase,username))
             con.commit()
             if con.total_changes > 0:
                 return status
@@ -29,12 +29,12 @@ def reg_1(cedula, name, gender, birthday, city, adds, phrase, password, rol):
         return status
 
 #----->REGISTRO DE UN USUARIO INTERNO (EMPLEADO)
-def reg_2(cedula, name, job, gender, birthday, city, adds, phrase, password, rol):
+def reg_2(cedula, name, job, gender, birthday, city, adds,username, phrase, password, rol):
     status={'state':True, 'error':None}
     try:
         with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase,Cargo) VALUES (?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password,rol,phrase,job))
+            cur.execute("INSERT INTO Usuarios(Cedula, Nombre_y_apellido, Sexo, Fecha_de_nacimiento, Direccion, Ciudad, Contrasena, rol, frase,Cargo,username) VALUES (?,?,?,?,?,?,?,?,?,?,?)",(cedula,name,gender,birthday,adds,city,password,rol,phrase,job,username))
             con.commit()
             if con.total_changes > 0:
                 return status
@@ -49,12 +49,12 @@ def reg_2(cedula, name, job, gender, birthday, city, adds, phrase, password, rol
         return status
 
 #----->VERIFICACION DE CREDENCIALES      
-def login_session(cedula, password):
+def login_session(username, password):
     status = {'state':True, 'error':None, 'data':None}
     try:
         with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol FROM Usuarios WHERE Cedula=?",[cedula]).fetchone()
+            query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol FROM Usuarios WHERE username=?",[username]).fetchone()
             if query!=None:
                 if check_password_hash(query[0],password):
                     status['data']=query
@@ -80,7 +80,7 @@ def recuperar_usuario(name, birthday, phrase):
     try:
         with sqlite3.connect("orion.db") as con:
             cur = con.cursor()
-            query=cur.execute("SELECT Cedula, frase, id_usuario FROM Usuarios WHERE Nombre_y_apellido=? AND Fecha_de_nacimiento=?",[name,birthday]).fetchone()
+            query=cur.execute("SELECT username, frase, id_usuario FROM Usuarios WHERE Nombre_y_apellido=? AND Fecha_de_nacimiento=?",[name,birthday]).fetchone()
             if query!=None:
                 if check_password_hash(query[1],phrase):
                     status['data']= [query[0],query[2]]

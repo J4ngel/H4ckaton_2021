@@ -34,9 +34,10 @@
                 <input type="text" class="form-control" id="name_field" name="name" placeholder="Digite su nombre completo">
             </div>
     
-            <div class="input-group mb-3">
-                <select class="form-select" id="inputGroupSelect01" name="gender">
-                    <option selected>Seleccione su sexo...</option>
+            <div class="form-group mb-3">
+                <label for="gender_field" class="form-label">Sexo</label>
+                <select class="form-control" id="inputGroupSelect01" id="gender_field" name="gender">
+                    <option selected value="0">Seleccione su sexo...</option>
                     <option value="1">Masculino</option>
                     <option value="2">Femenino</option>
                 </select>
@@ -44,7 +45,7 @@
     
             <div class="mb-3">
                 <label for="date_field" class="form-label">Fecha de nacimiento</label>
-                <input type="date" class="form-control" id="date_field" name="birthday" value="2021-11-13">
+                <input type="date" class="form-control" id="date_field" name="birthday">
             </div>
     
             <div class="mb-3">
@@ -55,6 +56,11 @@
             <div class="mb-3">
                 <label for="addr_field" class="form-label">Dirección</label>
                 <input type="text" class="form-control" id="addr_field" name="adds" placeholder="Digite su dirección de domicilio">
+            </div>
+
+            <div class="mb-3">
+                <label for="name_field" class="form-label">User Name</label>
+                <input type="text" class="form-control" id="name_field" name="username" placeholder="Digite un nombre de usuario (user name)">
             </div>
 
             <div class="mb-3">
