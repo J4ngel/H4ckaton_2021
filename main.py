@@ -70,10 +70,21 @@ def login():
                 session['name']=status_2['data'][1]
                 session['rol']=status_2['data'][2]
                 print("logueo con exito")
-                return redirect('/')
+
+                if session['rol'] == 3:
+                    return redirect('/login/dashboard')
+                elif session['rol'] == 2:
+                    return redirect('/empleado')
+                else:
+                    return redirect('/usuario')
 
     if 'user' in session:
-        return redirect('/') #Se redirige al perfil
+        if session['rol']==3:
+            return redirect('/login/dashboard')
+        elif session['rol']==2:
+            return redirect('/empleado')
+        else:
+            return redirect('/usuario')
     else:
         return render_template('login.html')
         
@@ -190,10 +201,65 @@ def registrarse():
     else:
         return render_template('registrarse.html')
 
+@app.route('/registro/empleado', methods=['GET', 'POST'])
+def registro_empleado():
+    if request.method == 'POST':
+        cedula      = escape(request.form['cedula'])
+        name        = escape(request.form['name'])
+        job         = escape(request.form['job'])
+        gender      = escape(request.form['gender'])
+        birthday     = escape(request.form['birthday'])
+        city        = escape(request.form['city'])
+        adds        = escape(request.form['adds'])
+        phrase      = escape(request.form['phrase'])
+        password    = escape(request.form['password'])
+        check_pass  = escape(request.form['check_pass'])
+        conditions  = escape(request.form.get('conditions'))
+        rol = 2  # 1 -> usuario externo / 2 -> usuario interno / 3 -> admin  
+
+        status_1 = verifications.valid_reg_2(cedula,name,job,gender,birthday,city,adds,phrase,password,check_pass,conditions)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/registro/empleado')
+        else:
+            hash_pass = generate_password_hash(password)
+            hash_phrase = generate_password_hash(phrase)
+
+            #status_2 = db_manager.reg_2(cedula,name,job,gender,birthday,city,adds,hash_phrase,hash_pass,rol)
+            status_2 = {'state':True} #Linea SOLO PARA PRUEBAS
+            if not status_2['state']:
+                flash(status_2['error'])
+                return redirect('/registro/empleado')
+            else:
+                flash("Registro exitoso, nuevo empleado agregado con exito")
+                return redirect('/registro/empleado')
+
+    if 'user' in session and session['rol'] != 3:
+        return redirect('/')
+    else:
+        return render_template('registro_empleado.html')
+
 # Jacke: Pagina de administrador
-@app.route('/login/dashboard')
+@app.route('/login/dashboard', methods=['GET','POST'])
 def dashboard():
-    return render_template('dashboard/dashboard.html')
+    if request.method == 'POST':
+        if 'user' in session:
+            session.clear()
+            flash('Sesión cerrada exitosamente!')
+            return redirect('/login')
+        else:
+            flash("Primero debe iniciar sesion")
+            return redirect('/login')
+
+    if 'user' in session:
+        if session['rol'] == 3:
+            return render_template('dashboard/dashboard.html')
+        elif session['rol'] == 2:
+            return redirect('/empleado')
+        else:
+            return redirect('/')
+    else:
+        return redirect('/')
 
 @app.route('/login/dashboard/productos/<tipo_producto>')
 @app.route('/login/dashboard/productos')
@@ -267,44 +333,6 @@ def dashboard_clientes():
             error = f'El usuario con la identificacion {cedula_a_buscar_paciente} no se encuentra registrado '
             return render_template("administradorPaciente.html", user=user(cedula_init), error = error)
     return render_template('dashboard/dashboard_clientes.html')'''
-
-@app.route('/registro/empleado', methods=['GET', 'POST'])
-def registro_empleado():
-    if request.method == 'POST':
-        cedula      = escape(request.form['cedula'])
-        name        = escape(request.form['name'])
-        job         = escape(request.form['job'])
-        gender      = escape(request.form['gender'])
-        birthday     = escape(request.form['birthday'])
-        city        = escape(request.form['city'])
-        adds        = escape(request.form['adds'])
-        phrase      = escape(request.form['phrase'])
-        password    = escape(request.form['password'])
-        check_pass  = escape(request.form['check_pass'])
-        conditions  = escape(request.form.get('conditions'))
-        rol = 2  # 1 -> usuario externo / 2 -> usuario interno / 3 -> admin  
-
-        status_1 = verifications.valid_reg_2(cedula,name,job,gender,birthday,city,adds,phrase,password,check_pass,conditions)
-        if not status_1['state']:
-            flash(status_1['error'])
-            return redirect('/registro/empleado')
-        else:
-            hash_pass = generate_password_hash(password)
-            hash_phrase = generate_password_hash(phrase)
-
-            #status_2 = db_manager.reg_2(cedula,name,job,gender,birthday,city,adds,hash_phrase,hash_pass,rol)
-            status_2 = {'state':True} #Linea SOLO PARA PRUEBAS
-            if not status_2['state']:
-                flash(status_2['error'])
-                return redirect('/registro/empleado')
-            else:
-                flash("Registro exitoso, nuevo empleado agregado con exito")
-                return redirect('/registro/empleado')
-
-    if 'user' in session and session['rol'] != 3:
-        return redirect('/')
-    else:
-        return render_template('registro_empleado.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
