@@ -95,7 +95,7 @@ def login_session_CAMBIOS(username, password):
         cursor.execute(*strsql)
         query= cursor.fetchone()
         if query!=None:
-            if check_password_hash(query[0],password):
+            if check_password_hash(query[0][0],password):
                 status['data']=query
                 return status
             else:

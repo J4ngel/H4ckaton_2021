@@ -162,7 +162,6 @@ def login():
             redirect('/login')
         else:
             status_2 = db_manager.login_session(username,password)
-
             if not status_2['state']:
                 flash(status_2['error'])
                 return redirect('/login')
