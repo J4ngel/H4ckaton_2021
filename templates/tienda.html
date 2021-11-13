@@ -26,22 +26,22 @@
                     <img src="{{url_for('static',filename='images/alimentos.jpg')}}"  alt="producto" width="10%">
                 </div>
                 <th>Nombre del producto</th>
-                <th>Cantidad</th>
+                <th>Cantidad disponibles</th>
                 <th>Precio unitario</th>
                 <th>Descuento</th>
-                <th>Valor Total</th>
                 <th></th>
             </tr>
                 <!--aqui se coloca el for-->
+            {% for d in data %}
             <tr>
-                <td><input type="text" readonly name="codigo" id="codigo"></td>
-                <td><input type="text" name="cantidad" id="cantidad"></td>
-                <td><input type="text" readonly name="precio" id="precio"></td>
-                <td><input type="text" readonly name="descuento" id="descuento"></td>
-                <td><input type="text" readonly name="valor_total" id="valor_total" ></td>
+                <td><input type="text" readonly name="codigo" id="codigo" value={{d[1]}}></td>
+                <td><input type="text" name="cantidad" id="cantidad" value={{d[3]}}></td>
+                <td><input type="text" readonly name="precio" id="precio" value={{d[5]}}></td>
+                <td><input type="text" readonly name="descuento" id="descuento" value={{d[6]}}></td>
                 <td><input type="submit" value="Agregar"></td>
                 
             </tr>
+            {% endfor %}
                 <!--aqui se coloca el endfor-->
             </table>
         </section>

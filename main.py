@@ -52,7 +52,9 @@ def empleado():
 # Yessid: Pagina de productos (clientte)
 @app.route('/tienda')
 def tienda():
-    return render_template('tienda.html')
+    data=db_manager.lista_productos()
+    print(data[0])
+    return render_template('tienda.html',data=data)
 
 # # Yessid: Pagina de productos enlatados (empleado)
 # @app.route('/productos/enlatados')
