@@ -81,6 +81,14 @@ def get_columns_usuario():
     names = list(map(lambda x: x[0], cursor.description))
     return names
 
+def get_columns_productos():
+    strsql = 'select * from Productos'
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(strsql)
+    names = list(map(lambda x: x[0], cursor.description))
+    return names
+
 def sql_search_user(cedula):
     strsql = 'select * from Usuarios where Cedula = ?', (cedula,)
     con =sql_connection()
@@ -94,5 +102,21 @@ def get_clientes():
     con =sql_connection()
     cursor = con.cursor()
     cursor.execute(*strsql)
+    response = cursor.fetchall()
+    return response
+
+def get_empleados():
+    strsql = 'select * from Usuarios where rol = ?',('2',)
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(*strsql)
+    response = cursor.fetchall()
+    return response
+
+def get_productos():
+    strsql = 'select * from Productos'
+    con =sql_connection()
+    cursor = con.cursor()
+    cursor.execute(strsql)
     response = cursor.fetchall()
     return response

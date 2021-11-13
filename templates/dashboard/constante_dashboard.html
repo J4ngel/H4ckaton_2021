@@ -89,10 +89,10 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Alimentos no Peresederos:</h6>
-                        <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Cereales</a>
-                        <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Enlatados</a>
-                        <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Frutos Secos</a>
-                        <a class="collapse-item" href="{{url_for('dashboard_productos')}}">Otros</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_productos', tipo_producto='Cereal')}}">Cereales</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_productos', tipo_producto='Enlatados')}}">Enlatados</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_productos', tipo_producto='Frutos Secos')}}">Frutos Secos</a>
+                        <a class="collapse-item" href="{{url_for('dashboard_productos', tipo_producto='Otros')}}">Otros</a>
                     </div>
                 </div>
             </li>
