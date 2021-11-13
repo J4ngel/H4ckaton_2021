@@ -196,3 +196,22 @@ def obtener_info_usuario(id_usuario):
     except Error:
         status['error'] = "Algo salió mal "+ Error
         return status
+
+#--------------------------------Yessid------------------
+# def listaproductos(id_baja):
+#     status = { 'error':None, 'data':None}
+#     try:
+#         with sqlite3.connect(ruta) as con:
+#             cur = con.cursor()
+#             query=cur.execute("SELECT Nombre_del_producto, Precio_unitario, Porcentaje_de_promocion, Calificacion_dada_al_producto FROM Productos WHERE id_baja=?  ",[id_baja]).fetchone()
+#             if query!=None:
+#                 status['data']= [query[0],query[1],query[2],query[3],query[4],query[5],query[6]]
+#                 return status
+#             else:
+                    
+#                 status['error'] = "Ocurrio un error"
+#                 return status
+                      
+#     except Error:
+#         status['error'] = "Algo salió mal "+ Error
+#         return status

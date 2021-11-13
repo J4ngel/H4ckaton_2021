@@ -57,14 +57,34 @@ def empleado():
         return redirect('/login/dashboard')
 
 # Yessid: Pagina de productos (clientte)
-@app.route('/productos')
+@app.route('/tienda')
 def tienda():
     return render_template('tienda.html')
 
-# Yessid: Pagina de productos (empleado)
-@app.route('/productos/enlatados')
-def precios():
-    return render_template('productoEnlatado.html')
+# # Yessid: Pagina de productos enlatados (empleado)
+# @app.route('/productos/enlatados')
+# def preciosE():
+#     return render_template('productoEnlatado.html')
+
+# # Yessid: Pagina de productos enlatados (empleado)
+# @app.route('/productos/cereales')
+# def preciosC():
+#     return render_template('productoCereal.html')
+
+# # Yessid: Pagina de productos enlatados (empleado)
+# @app.route('/productos/frutos')
+# def preciosF():
+#     return render_template('productoFrutos.html')
+
+# Yessid: Pagina de productos varios (empleado)
+@app.route('/productos')
+def preciosV():
+    return render_template('productoVarios.html')
+
+# Carlos: Pagina para el carrito de compras
+@app.route('/tienda/compras')
+def carrito():
+    return render_template("compras.html")
 
 @app.route('/login', methods=['GET','POST'])
 def login():
