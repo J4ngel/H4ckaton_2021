@@ -40,7 +40,17 @@ def usuario():
             flash(status_1['error'])
             return redirect('/usuario')
         
-        flash("PROCESO DE BASE DE DATOS")
+        id = session['id']
+        if 'cliente' in session:
+            id = session['cliente']
+        
+        status_2= db_manager.actualizar_info(id,name,addr,city)
+
+        if not status_2['state']:      
+            flash(status_2['error'])
+            return redirect("/usuario")
+
+        flash(status_2['data'])
         return redirect("/usuario")
 
     if 'user' in session and session['rol'] == 1:
@@ -52,6 +62,14 @@ def usuario():
             sexo="Femenino"
         return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],username=data[6])
     else:
+        if 'user' in session and session['rol'] == 3 and 'cliente' in session:
+            data=db_manager.obtener_info_usuario(session['cliente'])['data']
+            print(data)
+            if data[3] == 1:
+                sexo="Masculino"
+            else:
+                sexo="Femenino"
+            return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],username=data[6])
         return redirect('/login/dashboard')
 
 @app.route('/usuario/act_frase', methods=['POST'])
@@ -65,7 +83,18 @@ def act_frase_usuario():
             flash(status_1['error'])
             return redirect('/usuario')
         
-    flash("PROCESO DE BASE DE DATOS PARA CAMBIO DE FRASE")
+    id = session['id']
+    if 'cliente' in session:
+        id = session['cliente']
+    
+    hash_phrase= generate_password_hash(phrase)
+    status_2= db_manager.actualizar_frase(id, hash_phrase, old_pass)
+
+    if not status_2['state']:      
+        flash(status_2['error'])
+        return redirect("/usuario")
+
+    flash(status_2['data'])
     return redirect("/usuario")
 
 @app.route('/usuario/act_pass', methods=['POST'])
@@ -80,7 +109,18 @@ def act_pass_usuario():
             flash(status_1['error'])
             return redirect('/usuario')
         
-    flash("PROCESO DE BASE DE DATOS PARA CAMBIO DE CONTRASEÑA")
+    id = session['id']
+    if 'cliente' in session:
+        id = session['cliente']
+    
+    hash_pass= generate_password_hash(new_pass)
+    status_2= db_manager.actualizar_pass(id, hash_pass, old_pass)
+
+    if not status_2['state']:      
+        flash(status_2['error'])
+        return redirect("/usuario")
+
+    flash(status_2['data'])
     return redirect("/usuario")
 
 # Yessid: Pagina de usuario interno
@@ -424,6 +464,9 @@ def dashboard():
             elif 'cliente' in session:
                 session.pop('cliente')
 
+            if 'tipo' in session:
+                session.pop('tipo')
+
             return render_template('dashboard/dashboard.html')
         else:
             return redirect('/')
@@ -498,14 +541,14 @@ def dashboard_empleados():
 @app.route('/login/dashboard/empleados/editar', methods = ['GET', 'POST'])
 def editar_empleados():
     if request.method == 'POST':
-        cedula_empleado = escape(request.form['cedula_empleado'])
+        cedula_empleado = escape(request.form['cedula'])
 
         status_1 = verifications.valid_update_info(name=cedula_empleado)
         if not status_1['state']:
             flash(status_1['error'])
             return redirect('/login/dashboard/empleados/editar')
         
-        status_2 = db_manager.editar_empleados(cedula_empleado,2)
+        status_2 = db_manager.editar_usuarios(cedula_empleado,2)
 
         if not status_2['state']:
             flash(status_2['error'])
@@ -513,7 +556,10 @@ def editar_empleados():
         session['empleado']=status_2['data']
         return redirect('/empleado')
     if 'user' in session and session['rol']==3:
-        return render_template('editar_empleados.html')
+        if 'tipo' in session:
+            return render_template('editar_usuarios.html')
+        session["tipo"] = 2
+        return render_template('editar_usuarios.html')
     else:
         return redirect('/')
 
@@ -546,6 +592,32 @@ def dashboard_clientes():
             else:
                 error = f'El usuario con la identificacion {cedula_empleado} no se encuentra registrado '
                 return render_template('dashboard/dashboard_clientes.html', error = error)
+
+@app.route('/login/dashboard/clientes/editar', methods = ['GET', 'POST'])
+def editar_clientes():
+    if request.method == 'POST':
+        cedula_cliente = escape(request.form['cedula'])
+
+        status_1 = verifications.valid_update_info(name=cedula_cliente)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/login/dashboard/clientes/editar')
+        
+        status_2 = db_manager.editar_usuarios(cedula_cliente,1)
+
+        if not status_2['state']:
+            flash(status_2['error'])
+            return redirect('/login/dashboard/clientes/editar')
+        
+        session['cliente']=status_2['data']
+        return redirect('/usuario')
+    if 'user' in session and session['rol']== 3:
+        if 'tipo' in session:
+            return render_template('editar_usuarios.html')
+        session["tipo"] = 1
+        return render_template('editar_usuarios.html')
+    else:
+        return redirect('/')
 
 @app.route('/login/dashboard/ventas', methods = ['GET', 'POST'])
 def dashboard_ventas():

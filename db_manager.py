@@ -269,7 +269,7 @@ def eliminar_cuenta(id_usuario):
         return status
 
 #------>DEVUELVE EL id_usuario SI ENCUENTRA COINCIDENCIA
-def editar_empleados(cedula, rol):
+def editar_usuarios(cedula, rol):
     status = {'state':True, 'error':None, 'data':None}
     try:
         con=sql_connection()
