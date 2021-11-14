@@ -227,7 +227,6 @@ def obtener_info_usuario(id_usuario):
         return status
 
 #--------------------------------Yessid------------------
-<<<<<<< HEAD
 def lista_productos():
     status = { 'error':None, 'data':None}
     try:
@@ -238,22 +237,10 @@ def lista_productos():
                 status['data']= query1 #status['data']=[[]]
                 print(status['data'])
                 return status['data']
-=======
-def listaproductos(id_baja):
-    # status = { 'error':None, 'data':None}
-    try:
-        with sqlite3.connect(ruta) as con:
-            cur = con.cursor()
-            query=cur.execute("SELECT Nombre_del_producto, Precio_unitario, Porcentaje_de_promocion, Calificacion_dada_al_producto FROM Productos WHERE id_baja=?  ",[id_baja]).fetchone()
-            if query!=None:
-                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5],query[6]]
-                return status
->>>>>>> 9eea982d3952509a9239ee8e35c2429865498916
             else:
                     
                 status['error'] = "Ocurrio un error"
                 return status
-<<<<<<< HEAD
                       
     except Error:
         status['error'] = "Algo salió mal "+ Error
@@ -286,9 +273,29 @@ def actualizar_produc(id,nombre,precio,procentaje,categoria,bono):
             print("actualizo")          
     except Error:
         return "Error"
-=======
-                      
+
+#Luis --> Eliminar Producto
+def eliminar_producto(id):
+    try:
+        with sqlite3.connect(ruta) as con:
+            cur = con.cursor()
+            query1=cur.execute("DELETE FROM Productos WHERE Codigo_del_producto = ?",[id])
+            con.commit()
+                 
     except Error:
-        status['error'] = "Algo salió mal "+ Error
+        return "Error"
+
+#----->Yessid / Jackie (Registro de un producto nuevo)
+def nuevo_producto(codigo, nombre, tipo, cantidad, unidad, precio, descuento, bono, acumulado):
+    status={'state':True, 'error':None}
+    
+    try:
+        con=sql_connection()
+        cur = con.cursor()
+        cur.execute("INSERT INTO Productos(Codigo_del_producto, Nombre_del_producto, Tipo_producto, Cantidad_de_unidades_actuales_totales_en_el_inventario, Tipo_de_unidad, Precio_unitario, Porcentaje_de_promocion, Bono, Acumulados_descontados) VALUES (?,?,?,?,?,?,?,?,?)",(codigo, nombre, tipo, cantidad, unidad, precio, descuento, bono, acumulado,))
+        con.commit()
+            
+    except Error:
+        status['state'] = False
+        status['error'] = "Algo salió mal"
         return status
->>>>>>> 9eea982d3952509a9239ee8e35c2429865498916

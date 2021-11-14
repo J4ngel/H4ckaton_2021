@@ -34,7 +34,7 @@
                         </div>
                     </form>
                     <!-- end Search -->
-                    <a href="url_for('')"><button class="btn btn-primary" type="button">Crear</button></a>
+                    <a href="url_for('/nuevoP')"><button class="btn btn-primary" type="button">Crear</button></a>
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                                 
                             {% endfor %}
                             <td><a href="{{url_for('preciosV',produc=producto[0])}}"><button class="btn btn-primary" type="button">Editar</button></a></td>
-                               <td><a href="url_for()"><button class="btn btn-primary" type="button">Eliminar</button></a></td>
+                               <td><a href="{{url_for('eliminar_producto',produc=producto[0])}}"><button class="btn btn-primary" type="button">Eliminar</button></a></td>
                         </tr>
                         {% endfor %}
                         

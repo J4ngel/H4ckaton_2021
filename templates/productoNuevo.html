@@ -15,8 +15,7 @@
 <div class="col"></div>
 
     <div class="row d-flex justify-content-center">
-        <div class="col-4">
-        </div>
+        <div class="col-4"></div>
         <div class="col-4 ">
             <h2></h2>
             <div class="imagen d-flex justify-content-center">
@@ -24,41 +23,36 @@
             </div>
             <br>
             <br>
-            <label for="id_field" class="form-label">Nombre del producto</label>
-            <input type="text" class="form-control" value={{nombre}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Numero de lote</label>
-            <input type="text" readonly class="form-control" value={{lote}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Código del producto</label>
-            <input type="text" readonly class="form-control" value={{codigo}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Tipo de unidad de venta</label>
-            <input type="text" readonly class="form-control" value={{unidad}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Precio unitario</label>
-            <input type="text" class="form-control" value={{precio}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label" >Cantidades disponible</label>
-            <input type="text" class="form-control" readonly value={{cantidad}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Cantidades vendidas</label>
-            <input type="text" class="form-control" value={{vendidas}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Porcentaje de descuento</label>
-            <input type="text" class="form-control" value={{descuento}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Descuento acumulable</label>
-            <input type="text" class="form-control" value={{acumulable}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Cantidades disponible</label>
-            <input type="text" class="form-control" value={{cantidad}} id="id_field">
-            <br>
-            <label for="id_field" class="form-label">Promedio de calificacion del cliente</label>
-            <input type="text" class="form-control" readonly value={{calificacion}} id="id_field">
-            <br>
-            <button type="button" class="btn btn-primary" id="btn-actualizar">Crear nuevo</button>
-            <button type="button" class="btn btn-primary" id="btn-actualizar">Eliminar producto</button>   
+            <form action="/productos/nuevo", method="post">
+                <label for="id_field" class="form-label" name="nombre_producto">Codigo del producto</label>
+                <input type="text" class="form-control" name="codigo" id="id_field">
+                <br>
+                <label for="id_field" class="form-label">Nombre del producto</label>
+                <input type="text" class="form-control" name="nombre" id="id_field">
+                <br>
+                <label for="id_field" class="form-label">Tipo de producto</label>
+                <input type="text" class="form-control" name="tipo" id="id_field">
+                <br>
+                <label for="id_field" class="form-label">Cantidad</label>
+                <input type="text"  class="form-control" name="cantidad" id="id_field">
+                <br>
+                <label for="id_field" class="form-label">Tipo de unidad</label>
+                <input type="text" class="form-control" name="unidad" id="id_field">
+                <br>
+                <label for="id_field" class="form-label" >Precio del producto</label>
+                <input type="text" class="form-control" name="precio" id="id_field">
+                <br>
+                <label for="id_field" class="form-label">Descuento</label>
+                <input type="text" class="form-control" name="descuento" id="id_field">
+                <br>
+                <label for="id_field" class="form-label">Bono</label>
+                <input type="text" class="form-control" name="bono" id="id_field">
+                <br>
+                <label for="id_field" class="form-label">Descuento acumulable</label>
+                <input type="text" class="form-control" name="acumulado" id="id_field">
+                <br>
+                <button type="submit" class="btn btn-primary" id="btn-actualizar">Crear nuevo</button>
+            </form>
         </div>
 
         <!-- <div class="col-1 align-items-right">

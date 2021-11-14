@@ -1,5 +1,6 @@
 import os
 import hashlib
+from re import search
 import db_manager
 import verifications
 
@@ -37,15 +38,21 @@ def usuario():
             sexo="Masculino"
         else:
             sexo="Femenino"
-        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5])
+        return render_template('usuarioExterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],usuario=data[6])
     else:
         return redirect('/login/dashboard')
 
 # Yessid: Pagina de usuario interno
 @app.route('/empleado')
 def empleado():
-    if 'user' in session and session['rol'] == 2:
-        return render_template('usuarioInterno.html')
+    if 'user' in session and session['rol'] == 2 :
+        data=db_manager.obtener_info_usuario(session['id'])['data']
+        print(data)
+        if data[3] == 1:
+            sexo="Masculino"
+        else:
+            sexo="Femenino"
+        return render_template('usuarioInterno.html',cedula=data[0],nombre=data[1],fecha=data[2],sexo=sexo,direccion=data[4],ciudad=data[5],usuario=data[6])
     else:
         return redirect('/login/dashboard')
 
@@ -63,7 +70,8 @@ def preciosV(produc):
     produc=db_manager.consulta_produc(idprod)
     print(produc)
     return render_template('productoVarios.html',produc=produc)
-#carlosLuis:Pagina para actualizar producto    
+
+#carlosLuis:Pagina para actualizar producto
 @app.route('/actualizar',methods=['POST'])
 def actualizar_produc():
     if request.method == 'POST':
@@ -86,7 +94,7 @@ def actualizar_produc():
             return  redirect('/login/dashboard/productos/Enlatados')
         else:
             return  redirect('/login/dashboard/productos/Otros')
-    
+
 # Carlos: Pagina para el carrito de compras
 @app.route('/tienda/compras')
 def carrito():
@@ -97,7 +105,7 @@ def login():
     if request.method == 'POST':
         username = escape(request.form['username'])
         password = escape(request.form['password'])
-        
+
         status_1 = verifications.empity_login(username,password)
 
         if not status_1['state']:
@@ -160,7 +168,7 @@ def eliminar_cuenta():
                 return redirect('/login')
     else:
         flash("Primero debe iniciar sesion")
-        return redirect('/login')   
+        return redirect('/login')
 
 @app.route('/login/recuperar_usuario', methods=['POST'])
 def recuperar_usuario():
@@ -175,7 +183,7 @@ def recuperar_usuario():
         return redirect('/login')
     else:
         status_2 = db_manager.recuperar_usuario(name,birthday,phrase)
-        
+
         if not status_2['state']:
             flash(status_2['error'])
             return redirect('/login')
@@ -196,7 +204,7 @@ def verificar_persona():
         return redirect('/login')
     else:
         status_2 = db_manager.recuperar_usuario(name,birthday,phrase)
-            
+
         if not status_2['state']:
             flash(status_2['error'])
             return redirect('/login')
@@ -210,7 +218,7 @@ def recuperar_pass():
     if request.method == 'POST':
         password = escape(request.form['password'])
         check_pass= escape(request.form['check_pass'])
-        
+
         status_1 = verifications.valid_recuperar_pass(password, check_pass)
 
         if not status_1['state']:
@@ -250,7 +258,7 @@ def registrarse():
         password    = escape(request.form['password'])
         check_pass  = escape(request.form['check_pass'])
         conditions  = escape(request.form.get('conditions'))
-        rol = 1  # 1 -> usuario externo / 2 -> usuario interno / 3 -> Admin   
+        rol = 1  # 1 -> usuario externo / 2 -> usuario interno / 3 -> Admin
 
         status_1 = verifications.valid_reg_1(cedula,name,gender,birthday,city,adds,phrase,username,password,check_pass,conditions)
         if not status_1['state']:
@@ -260,18 +268,18 @@ def registrarse():
             hash_pass = generate_password_hash(password)
             hash_phrase = generate_password_hash(phrase)
 
-            status_2 = db_manager.reg_1(cedula,name,gender,birthday,city,adds, username,hash_phrase,hash_pass,rol)           
-            
+            status_2 = db_manager.reg_1(cedula,name,gender,birthday,city,adds, username,hash_phrase,hash_pass,rol)
+
             if not status_2['state']:
                 flash(status_2['error'])
                 return redirect('/registrarse')
             else:
-                if 'user' in session and session['rol'] == 3:  
+                if 'user' in session and session['rol'] == 3:
                     flash("Registro exitoso, nuevo cliente agregado con exito")
                 else:
                     flash("Registro exitoso, ahora puede dirigirse a login e iniciar sesión")
                 return redirect('/registrarse')
-    
+
     if 'user' in session and session['rol'] != 3:
         return redirect('/')
     else:
@@ -292,7 +300,7 @@ def registro_empleado():
         password    = escape(request.form['password'])
         check_pass  = escape(request.form['check_pass'])
         conditions  = escape(request.form.get('conditions'))
-        rol = 2  # 1 -> usuario externo / 2 -> usuario interno / 3 -> admin  
+        rol = 2  # 1 -> usuario externo / 2 -> usuario interno / 3 -> admin
 
         status_1 = verifications.valid_reg_2(cedula,name,job,gender,birthday,city,adds,username,phrase,password,check_pass,conditions)
         if not status_1['state']:
@@ -303,7 +311,7 @@ def registro_empleado():
             hash_phrase = generate_password_hash(phrase)
 
             status_2 = db_manager.reg_2(cedula,name,job,gender,birthday,city,adds,username,hash_phrase,hash_pass,rol)
-        
+
             if not status_2['state']:
                 flash(status_2['error'])
                 return redirect('/registro/empleado')
@@ -342,7 +350,7 @@ def dashboard_productos(tipo_producto):
     db_productos = db_manager.get_productos()
     for row in db_productos:
         productos.append(row)
-        
+
     categoria = []
     if tipo_producto == 'Cereal' or tipo_producto == 'Frutos secos' or tipo_producto == 'Enlatados':
         for i in range(len(productos)):
@@ -356,7 +364,7 @@ def dashboard_productos(tipo_producto):
         return render_template('dashboard/dashboard_productos.html', tipo_producto=tipo_producto, columnas=columnas, productos=categoria)
     else:
         coincidencias = []
-        global codigo_producto 
+        global codigo_producto
         codigo_producto = request.form['codigo_producto']
         busqueda_codigo = db_manager.sql_search_product(codigo_producto)
         if len(busqueda_codigo)>0:
@@ -366,7 +374,7 @@ def dashboard_productos(tipo_producto):
         else:
             error = f'El producto con la identificacion {codigo_producto} no se encuentra registrado '
             return render_template('dashboard/dashboard_productos.html', error = error)
- 
+
 @app.route('/login/dashboard/empleados', methods = ['GET', 'POST'])
 def dashboard_empleados():
     columnas = []
@@ -379,11 +387,11 @@ def dashboard_empleados():
     db_empleados = db_manager.get_empleados()
     for row in db_empleados:
         empleados.append(row)
-    if request.method == 'GET':        
+    if request.method == 'GET':
         return render_template('dashboard/dashboard_empleados.html', columnas=columnas, empleados=empleados)
     else:
         coincidencias = []
-        global cedula_empleado 
+        global cedula_empleado
         cedula_empleado = request.form['empleado_buscado']
         busqueda_cedula = db_manager.sql_search_user(cedula_empleado)
         if len(busqueda_cedula)>0:
@@ -406,12 +414,12 @@ def dashboard_clientes():
         db_clientes = db_manager.get_clientes()
         for row in db_clientes:
             clientes.append(row)
-        
+
         if request.method == 'GET':
             return render_template('dashboard/dashboard_clientes.html', columnas=columnas, clientes=clientes)
         else:
             coincidencias = []
-            global cedula_empleado 
+            global cedula_empleado
             cedula_empleado = request.form['cliente_buscado']
             print(cedula_empleado)
             busqueda_cedula = db_manager.sql_search_user(cedula_empleado)
@@ -427,6 +435,56 @@ def dashboard_clientes():
 @app.route('/login/dashboard/ventas', methods = ['GET', 'POST'])
 def dashboard_ventas():
     return render_template('dashboard/dashboard_ventas.html')
+
+#Luis (Eliminar producto)
+@app.route('/eliminar_producto/<produc>')
+def eliminar_producto(produc):
+    id=produc
+    print(id)
+    q=db_manager.consulta_produc(id)[2]
+    db_manager.eliminar_producto(id)
+    if q == 'Cereal':
+        return  redirect('/login/dashboard/productos/Cereal')
+    elif q == 'Frutos secos':
+        return  redirect('/login/dashboard/productos/Frutos secos')
+    elif q == 'Enlatados':
+        return  redirect('/login/dashboard/productos/Enlatados')
+    else:
+        return  redirect('/login/dashboard/productos/Otros')
+
+
+#--------------------Yessid---------------------
+
+@app.route('/productos/nuevo', methods=['GET','POST'])
+def nuevoP():
+    if request.method == 'POST':
+
+        if 'user' in session and session['rol'] == 1 :
+            return redirect('/')
+        else:
+            codigo          = escape(request.form['codigo'])
+            nombre          = escape(request.form['nombre'])
+            tipo            = escape(request.form['tipo'])
+            cantidad        = escape(request.form['cantidad'])
+            unidad          = escape(request.form['unidad'])
+            precio          = escape(request.form['precio'])
+            descuento       = escape(request.form['descuento'])
+            bono            = escape(request.form['bono'])
+            acumulado       = escape(request.form['acumulado'])
+            
+            search=db_manager.sql_search_product(codigo)
+            
+            if len(search) > 0:
+                flash ("El producto ya esta creado")
+                return render_template('productoNuevo.html')
+            else: 
+                db_manager.nuevo_producto(codigo, nombre, tipo, cantidad, unidad, precio, descuento, bono, acumulado)
+                flash ("Producto creado de forma exitosa")
+                return render_template('productoNuevo.html')
+
+    else: 
+        return render_template('productoNuevo.html')
+#--------------------Yessid---------------------
 
 
 if __name__ == '__main__':

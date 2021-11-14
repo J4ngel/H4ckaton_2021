@@ -24,20 +24,20 @@
             <br>
             <br>
             <label for="id_field" class="form-label">Cedula</label>
-            <input type="text" readonly class="form-control" placeholder="Cédula del usuario (no se modifica)" id="id_field">
+            <input type="text" readonly class="form-control" value={{cedula}} id="id_field">
             <br>
             <label for="id_field" class="form-label">Fecha de Nacimiento</label>
-            <input type="text" readonly class="form-control" placeholder="Fecha de nacimiento (no se modifica)" id="id_field">
+            <input type="text" readonly class="form-control" value={{fecha}} id="id_field">
             <br>
             <label for="id_field" class="form-label">Nombre de Usuario</label>
-            <input type="text" readonly class="form-control" placeholder="Nombre de Usuario (no se puede modificar)" id="id_field">
+            <input type="text" readonly class="form-control" value={{nombre}} id="id_field">
             <br>
             <label for="id_field" class="form-label">Sexo</label>
-            <input type="text" readonly class="form-control" placeholder="Sexo del Usuario (no se puede modificar)" id="id_field"><br>
+            <input type="text" readonly class="form-control" value={{sexo}} id="id_field"><br>
             <label for="id_field" class="form-label">Dirección</label>
-            <input type="text" class="form-control" placeholder="Dirección (se puede modificar)" id="id_field"><br>
+            <input type="text" class="form-control" value={{direccion}} id="id_field"><br>
             <label for="id_field" class="form-label">Ciudad</label>
-            <input type="text" class="form-control" placeholder="Ciudad (se puede modificar)" id="id_field">
+            <input type="text" class="form-control" value={{ciudad}} id="id_field">
             <br>
             <button type="button" class="btn btn-primary" id="btn-actualizar">Actualizar</button>
             <a href="/eliminar_cuenta"><button type="button" class="btn btn-primary" id="btn-actualizar">Eliminar cuenta</button></a>
@@ -59,6 +59,7 @@
             
             <br>
             <h1>Perfil del Empleado</h1>
+            <h2>{{usuario}}</h2>
             <br>
             <br>
             <br>
