@@ -72,10 +72,36 @@ def tienda():
 #     return render_template('productoFrutos.html')
 
 # Yessid: Pagina de productos varios (empleado)
-@app.route('/productos')
-def preciosV():
-    return render_template('productoVarios.html')
+@app.route('/productos/<produc>')
+def preciosV(produc):
+    idprod=produc
+    produc=db_manager.consulta_produc(idprod)
+    print(produc)
+    return render_template('productoVarios.html',produc=produc)
+#carlosLuis:Pagina para actualizar producto    
+@app.route('/actualizar',methods=['POST'])
+def actualizar_produc():
+    if request.method == 'POST':
+        id=escape(request.form['idproduc'])
+        nombre=escape(request.form['nombre'])
+        precio=escape(request.form['precio'])
+        porcentaje=escape(request.form['porcentaje'])
+        categoria=escape(request.form['categoria'])
+        bono=escape(request.form['bono'])
+        db_manager.actualizar_produc(id,nombre,precio,porcentaje,categoria,bono)
+        flash("producto actualizado")
+        print("producto actualizado")
+        q=db_manager.consulta_produc(id)[2]
 
+        if q == 'Cereal':
+            return  redirect('/login/dashboard/productos/Cereal')
+        elif q == 'Frutos secos':
+            return  redirect('/login/dashboard/productos/Frutos secos')
+        elif q == 'Enlatados':
+            return  redirect('/login/dashboard/productos/Enlatados')
+        else:
+            return  redirect('/login/dashboard/productos/Otros')
+    
 # Carlos: Pagina para el carrito de compras
 @app.route('/tienda/compras')
 def carrito():

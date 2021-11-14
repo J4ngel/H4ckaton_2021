@@ -245,3 +245,31 @@ def lista_productos():
     except Error:
         status['error'] = "Algo salió mal "+ Error
         return status
+
+def consulta_produc(id):
+    status = {'error':None, 'data':None}
+    try:
+        with sqlite3.connect(ruta) as con:
+            cur = con.cursor()
+            query1=cur.execute("SELECT * FROM Productos WHERE Codigo_del_producto=?",[id]).fetchone()
+            if query1!=None:
+                status['data']= query1 #status['data']=[[]]
+                print(status['data'])
+                return status['data']
+            else:                    
+                status['error'] = "Ocurrio un error"
+                return status
+                      
+    except Error:
+        status['error'] = "Algo salió mal "+ Error
+        return status
+
+def actualizar_produc(id,nombre,precio,procentaje,categoria,bono):
+    try:
+        with sqlite3.connect(ruta) as con:
+            cur = con.cursor()
+            query1=cur.execute("UPDATE Productos SET Nombre_del_producto =?,Precio_unitario =?,Porcentaje_de_promocion =?,Categoria_del_producto =?,Bono =? WHERE Codigo_del_producto =?",[nombre,precio,procentaje,categoria,bono,id])
+            con.commit()
+            print("actualizo")          
+    except Error:
+        return "Error"
