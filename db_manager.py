@@ -227,6 +227,7 @@ def obtener_info_usuario(id_usuario):
         return status
 
 #--------------------------------Yessid------------------
+<<<<<<< HEAD
 def lista_productos():
     status = { 'error':None, 'data':None}
     try:
@@ -237,10 +238,22 @@ def lista_productos():
                 status['data']= query1 #status['data']=[[]]
                 print(status['data'])
                 return status['data']
+=======
+def listaproductos(id_baja):
+    # status = { 'error':None, 'data':None}
+    try:
+        with sqlite3.connect(ruta) as con:
+            cur = con.cursor()
+            query=cur.execute("SELECT Nombre_del_producto, Precio_unitario, Porcentaje_de_promocion, Calificacion_dada_al_producto FROM Productos WHERE id_baja=?  ",[id_baja]).fetchone()
+            if query!=None:
+                status['data']= [query[0],query[1],query[2],query[3],query[4],query[5],query[6]]
+                return status
+>>>>>>> 9eea982d3952509a9239ee8e35c2429865498916
             else:
                     
                 status['error'] = "Ocurrio un error"
                 return status
+<<<<<<< HEAD
                       
     except Error:
         status['error'] = "Algo salió mal "+ Error
@@ -273,3 +286,9 @@ def actualizar_produc(id,nombre,precio,procentaje,categoria,bono):
             print("actualizo")          
     except Error:
         return "Error"
+=======
+                      
+    except Error:
+        status['error'] = "Algo salió mal "+ Error
+        return status
+>>>>>>> 9eea982d3952509a9239ee8e35c2429865498916

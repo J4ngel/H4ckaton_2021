@@ -56,21 +56,6 @@ def tienda():
     print(data[0])
     return render_template('tienda.html',data=data)
 
-# # Yessid: Pagina de productos enlatados (empleado)
-# @app.route('/productos/enlatados')
-# def preciosE():
-#     return render_template('productoEnlatado.html')
-
-# # Yessid: Pagina de productos enlatados (empleado)
-# @app.route('/productos/cereales')
-# def preciosC():
-#     return render_template('productoCereal.html')
-
-# # Yessid: Pagina de productos enlatados (empleado)
-# @app.route('/productos/frutos')
-# def preciosF():
-#     return render_template('productoFrutos.html')
-
 # Yessid: Pagina de productos varios (empleado)
 @app.route('/productos/<produc>')
 def preciosV(produc):
