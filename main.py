@@ -249,9 +249,9 @@ def login():
 
             else:
                 session['user']=username
-                session['name']=status_2['data'][0][1]
-                session['rol']=status_2['data'][0][2]
-                session['id']=status_2['data'][0][3]
+                session['name']=status_2['data'][0]
+                session['rol']=status_2['data'][1]
+                session['id']=status_2['data'][2]
                 print("logueo con exito")
 
                 if session['rol'] == 3:
@@ -287,7 +287,7 @@ def eliminar_cuenta():
 
             if not status['state']:
                 flash(status['error'])
-                if session['role'] == 1:
+                if session['rol'] == 1:
                     return redirect('/usuario')
                 else:
                     return redirect('/empleado')
@@ -295,6 +295,33 @@ def eliminar_cuenta():
                 session.clear()
                 flash(status['data'])
                 return redirect('/login')
+        else:
+            if 'tipo_eliminar' in session:
+                id=""
+                if 'empleado' in session:
+                    id = session['empleado']
+                elif 'cliente' in session:
+                    id=session['cliente']
+                elif id == "":
+                    return redirect('/login/dashboard')
+                
+                status = db_manager.eliminar_cuenta(id)
+
+                if not status['state']:
+                    flash(status['error'])
+                    if session['tipo_eliminar'] == 1:
+                        return redirect('/login/dashboard/clientes/eliminar')
+                    else:
+                        return redirect('/login/dashboard/empleados/eliminar')
+                else:
+                    flash(status['data'])
+                    if session['tipo_eliminar'] == 1:
+                        return redirect('/login/dashboard/clientes/eliminar')
+                    else:
+                        return redirect('/login/dashboard/empleados/eliminar')
+            else:
+                return redirect('/login/dashboard')
+            
     else:
         flash("Primero debe iniciar sesion")
         return redirect('/login')   
@@ -465,7 +492,9 @@ def dashboard():
                 session.pop('cliente')
 
             if 'tipo' in session:
-                session.pop('tipo')
+                session.pop('tipo') 
+            if 'tipo_eliminar' in session:
+                session.pop('tipo_eliminar')
 
             return render_template('dashboard/dashboard.html')
         else:
@@ -616,6 +645,60 @@ def editar_clientes():
             return render_template('editar_usuarios.html')
         session["tipo"] = 1
         return render_template('editar_usuarios.html')
+    else:
+        return redirect('/')
+
+@app.route('/login/dashboard/empleados/eliminar', methods = ['GET', 'POST'])
+def eliminar_empleados():
+    if request.method == 'POST':
+        cedula_empleado = escape(request.form['cedula'])
+
+        status_1 = verifications.valid_update_info(name=cedula_empleado)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/login/dashboard/empleados/eliminar')
+        
+        status_2 = db_manager.editar_usuarios(cedula_empleado,2)
+
+        if not status_2['state']:
+            flash(status_2['error'])
+            return redirect('/login/dashboard/empleados/eliminar')
+        session['empleado']=status_2['data']
+        session['tipo_eliminar'] = 2
+        return redirect('/eliminar_cuenta')
+    
+    if 'user' in session and session['rol']==3:
+        if 'tipo' in session:
+            return render_template('eliminar_usuarios.html')
+        session["tipo"] = 2
+        return render_template('eliminar_usuarios.html')
+    else:
+        return redirect('/')
+
+@app.route('/login/dashboard/clientes/eliminar', methods = ['GET', 'POST'])
+def eliminar_clientes():
+    if request.method == 'POST':
+        cedula_cliente = escape(request.form['cedula'])
+
+        status_1 = verifications.valid_update_info(name=cedula_cliente)
+        if not status_1['state']:
+            flash(status_1['error'])
+            return redirect('/login/dashboard/clientes/eliminar')
+        
+        status_2 = db_manager.editar_usuarios(cedula_cliente,1)
+
+        if not status_2['state']:
+            flash(status_2['error'])
+            return redirect('/login/dashboard/clientes/eliminar')
+        session['cliente']=status_2['data']
+        session['tipo_eliminar'] = 1
+        return redirect('/eliminar_cuenta')
+
+    if 'user' in session and session['rol']==3:
+        if 'tipo' in session:
+            return render_template('eliminar_usuarios.html')
+        session["tipo"] = 1
+        return render_template('eliminar_usuarios.html')
     else:
         return redirect('/')
 

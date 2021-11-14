@@ -62,23 +62,21 @@ def reg_2(cedula, name, job, gender, birthday, city, adds,username, phrase, pass
 def login_session(username, password):
     status = {'state':True, 'error':None, 'data':None}
     try:
-        strsql = 'SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?', (username,)
         con=sql_connection()
-        cursor = con.cursor()
-        cursor.execute(*strsql)
-        query= cursor.fetchall()
+        cur = con.cursor()
+        query=cur.execute("SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?",[username]).fetchone()
         if query!=None:
-            if check_password_hash(query[0][0],password):
-                status['data']=query
+            if check_password_hash(query[0],password):
+                status['data']= [query[1], query[2], query[3]]
                 return status
             else:
                 status['state'] = False
-                status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
+                status['error'] = "Credenciales incorrectas, verifique la entrada e intente de nuevo"
                 return status
                 
         else:
             status['state'] = False
-            status['error'] = "Credenciales invalidas verifique la cedula y/o la contraseña"
+            status['error'] = "El usuario digitado no existe"
             return status
         
     except Error:
@@ -86,14 +84,14 @@ def login_session(username, password):
         status['error'] = "Algo salió mal"
         return status
 
-def login_session_CAMBIOS(username, password):
+def login_session_backup(username, password):
     status = {'state':True, 'error':None, 'data':None}
     try:
         strsql = 'SELECT Contrasena, Nombre_y_apellido, rol,id_usuario FROM Usuarios WHERE username=?', (username,)
         con=sql_connection()
         cursor = con.cursor()
         cursor.execute(*strsql)
-        query= cursor.fetchone()
+        query= cursor.fetchall()
         if query!=None:
             if check_password_hash(query[0][0],password):
                 status['data']=query
