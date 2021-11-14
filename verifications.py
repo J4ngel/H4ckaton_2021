@@ -72,7 +72,7 @@ def empity_login(username, password):
 
     if len(username) == 0:
         status['state'] = False
-        status['error'] = "El campo de la cedula está vacío"
+        status['error'] = "El campo Nombre de usuario está vacío"
     elif len(password) == 0:
         status['state'] = False
         status['error'] = "El campo de la contraseña está vacío"
@@ -109,3 +109,30 @@ def valid_recuperar_pass(password,check_pass):
                 return status
             else:
                 return status
+
+def valid_update_info(name = "-", addr = "-", city="-", phrase="-", old_pass="-", new_pass="-", check_pass="-"):
+    status={'state':True, 'error': None}
+
+    if len(name) == 0 or len(addr) == 0 or len(city) == 0 or len(phrase) == 0 or len(old_pass) == 0 or len(new_pass) == 0 or len(check_pass) == 0:
+        status['state']=False
+        status['error'] = "Algunos campos estan vacíos"
+        if len(old_pass) == 0:
+            status['error'] = "Para efectuar este cambio debe ingresar su contraseña actual en su respectivo campo"
+        return status 
+    
+    if check_pass=="-":
+        return status
+
+    if not valid_pass(new_pass):
+            status['state'] = False
+            status['error'] = "La contraseña debe contener minimo 8 caracteres, entre ellos: numeros, letras (mayus y min) y un caracter especial"
+            return status
+    else:
+        if new_pass != check_pass:
+            status['state'] = False
+            status['error'] = "Las contraseñas no coinciden"
+            return status
+        
+        else:
+            return status         
+    
