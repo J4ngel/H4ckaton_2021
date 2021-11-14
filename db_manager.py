@@ -112,7 +112,7 @@ def login_session_CAMBIOS(username, password):
         status['state'] = False
         status['error'] = "Algo salió mal"
         return status
-#----->DEVUELVE LA CEDULA SI LAS TRES PREGUNTAS SE RESUELVEN DE FORMA CORRECTA
+#----->DEVUELVE EL username SI LAS TRES PREGUNTAS SE RESUELVEN DE FORMA CORRECTA
 def recuperar_usuario(name, birthday, phrase):
     status = {'state':True, 'error':None, 'data':None}
     try:
@@ -138,7 +138,7 @@ def recuperar_usuario(name, birthday, phrase):
         status['error'] = "Algo salió mal"
         return status
 
-#----->ACTUALIZA LA INFORMACIÓN SI SE CUMPLIERON LAS VERIFICACIONES ANTERIORES
+#----->ACTUALIZA LA CONTRASEÑA SI SE CUMPLIERON LAS VERIFICACIONES ANTERIORES
 def recuperar_pass(password,id_usuario):
     status = {'state':True, 'error':None, 'data':None}
     try:
@@ -159,6 +159,94 @@ def recuperar_pass(password,id_usuario):
         status['error'] = "Algo salió mal"
         return status
 
+#----->ACTUALIZA LA IFNORMACION GENERAL CON id_usuario
+def actualizar_info(id_usuario, name, addr, city):
+    status = {'state':True, 'error':None, 'data':None}
+    try:
+        con=sql_connection()
+        cur = con.cursor()
+        cur.execute("UPDATE Usuarios SET Nombre_y_apellido=?, Direccion=?, Ciudad=? WHERE id_usuario=?",[name,addr,city,id_usuario])
+        con.commit()
+        if con.total_changes > 0:
+            status['data']="Datos actualizados con exito"
+            return status
+        else:
+            status['state']=False
+            status['error']="No se pudo actualizar"
+            return status
+        
+    except Error:
+        status['state'] = False
+        status['error'] = "Algo salió mal"
+        return status
+
+#-------->ACTUALIZAR FRASE CON id_usuario
+def actualizar_frase(id_usuario, phrase, password):
+    status = {'state':True, 'error':None, 'data':None}
+    try:
+        con=sql_connection()
+        cur = con.cursor()
+
+        query=cur.execute("SELECT Contrasena FROM Usuarios WHERE id_usuario=?",[id_usuario]).fetchone()
+        if query!=None:
+            if check_password_hash(query[0],password):
+                        cur.execute("UPDATE Usuarios SET frase=? WHERE id_usuario=?",[phrase,id_usuario])
+                        con.commit()
+                        if con.total_changes > 0:
+                            status['data']="Frase de seguridad actualizada con exito"
+                            return status
+                        else:
+                            status['state']=False
+                            status['error']="No se pudo actualizar la frase"
+                            return status
+            else:
+                status['state'] = False
+                status['error'] = "Contraseña actual erronea, intente nuevamente"
+                return status
+                
+        else:
+            status['state'] = False
+            status['error'] = "Fallo la busqueda"
+            return status
+        
+    except Error:
+        status['state'] = False
+        status['error'] = "Algo salió mal"
+        return status
+
+#------>ACTUALIZAR LA CONTRASEÑA CON id_usuario
+def actualizar_pass(id_usuario, new_pass, password):
+    status = {'state':True, 'error':None, 'data':None}
+    try:
+        con=sql_connection()
+        cur = con.cursor()
+
+        query=cur.execute("SELECT Contrasena FROM Usuarios WHERE id_usuario=?",[id_usuario]).fetchone()
+        if query!=None:
+            if check_password_hash(query[0],password):
+                        cur.execute("UPDATE Usuarios SET Contrasena=? WHERE id_usuario=?",[new_pass,id_usuario])
+                        con.commit()
+                        if con.total_changes > 0:
+                            status['data']="Contraseña actualizada con exito"
+                            return status
+                        else:
+                            status['state']=False
+                            status['error']="No se pudo actualizar la contraseña"
+                            return status
+            else:
+                status['state'] = False
+                status['error'] = "Contraseña actual erronea, intente nuevamente"
+                return status
+                
+        else:
+            status['state'] = False
+            status['error'] = "Fallo la busqueda"
+            return status
+        
+    except Error:
+        status['state'] = False
+        status['error'] = "Algo salió mal"
+        return status
 #------>ELIMINAR CUENTAS POR id_usuario
 def eliminar_cuenta(id_usuario):
     status = {'state':True, 'error':None, 'data':None}
@@ -173,6 +261,26 @@ def eliminar_cuenta(id_usuario):
         else:
             status['state']=False
             status['error']="No se pudo eliminar la cuenta"
+            return status
+        
+    except Error:
+        status['state'] = False
+        status['error'] = "Algo salió mal"
+        return status
+
+#------>DEVUELVE EL id_usuario SI ENCUENTRA COINCIDENCIA
+def editar_empleados(cedula, rol):
+    status = {'state':True, 'error':None, 'data':None}
+    try:
+        con=sql_connection()
+        cur = con.cursor()
+        query=cur.execute("SELECT id_usuario FROM Usuarios WHERE Cedula=? AND rol=?",[cedula,rol]).fetchone()
+        if query!=None:
+            status['data']= query[0]
+            return status           
+        else:
+            status['state'] = False
+            status['error'] = "La cedula no se encuentra registrada, verifique los datos e intente nuevamente"
             return status
         
     except Error:

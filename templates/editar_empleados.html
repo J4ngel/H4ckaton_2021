@@ -1,0 +1,35 @@
+{%  extends "constantes.html" %}
+
+{% block title %}Editar empleados{% endblock %}
+
+{% block alertas %}
+<div class="row">
+    {% for message in get_flashed_messages() %}
+    <div class="col"></div>
+    <div class="col-6 text-center">
+        <div class="alert alert-warning" style="margin-top:10px;" role="alert">
+            <b>{{ message }}</b>
+        </div>
+    </div>
+    <div class="col"></div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block desarrollo %}
+<div class="col"></div>
+
+<form action='/login/dashboard/empleados/editar' class="col-3" method="post">
+    <div class="mb-3" Style="margin-top: 50%;">
+        <label for="id_field" class="form-label" Style="font-size:15px">Cedula del empleado</label>
+        <input type="text" class="form-control" placeholder="Digite la cedula del empleado a editar (sin espacios)" id="id_field" name="cedula_empleado">
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary" Style="padding: 8px; width:20%; margin-left:25%"><b>Editar</b></button>
+        <a href='/login/dashboard'><button type="button" class="btn btn-primary" Style="padding: 8px; width:26%; margin-left: 5%;"><b>Volver</b></button></a>
+    </div>
+</form>
+
+<div class="col"></div>
+{% endblock %}
