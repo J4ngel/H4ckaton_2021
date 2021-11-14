@@ -319,6 +319,30 @@ def eliminar_cuenta():
                         return redirect('/login/dashboard/clientes/eliminar')
                     else:
                         return redirect('/login/dashboard/empleados/eliminar')
+
+            elif 'tipo' in session:
+                id=""
+                if 'empleado' in session:
+                    id = session['empleado']
+                elif 'cliente' in session:
+                    id=session['cliente']
+                elif id == "":
+                    return redirect('/login/dashboard')
+                
+                status = db_manager.eliminar_cuenta(id)
+
+                if not status['state']:
+                    flash(status['error'])
+                    if session['tipo'] == 1:
+                        return redirect('/login/dashboard/clientes/eliminar')
+                    else:
+                        return redirect('/login/dashboard/empleados/eliminar')
+                else:
+                    flash(status['data'])
+                    if session['tipo'] == 1:
+                        return redirect('/login/dashboard/clientes/eliminar')
+                    else:
+                        return redirect('/login/dashboard/empleados/eliminar')
             else:
                 return redirect('/login/dashboard')
             

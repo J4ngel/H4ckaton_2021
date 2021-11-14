@@ -21,7 +21,11 @@
 
 {% if 'tipo' in session and session['tipo']==2 %}
 <form action='/login/dashboard/empleados/editar' class="col-3" method="post">
-    <div class="mb-3" Style="margin-top: 50%;">
+    <div class="mb-3 text-center" Style="margin-top: 10%;">
+        <img src="{{url_for('static',filename='images/editar.png')}}" alt="Editar" width="200px" height="200px">
+    </div>
+
+    <div class="mb-3">
         <label for="id_field" class="form-label" Style="font-size:15px">Cedula del empleado</label>
         <input type="text" class="form-control" placeholder="Digite la cedula del empleado a editar (sin espacios)" id="id_field" name="cedula">
     </div>
@@ -33,7 +37,11 @@
 </form>
 {% else %}
 <form action='/login/dashboard/clientes/editar' class="col-3" method="post">
-    <div class="mb-3" Style="margin-top: 50%;">
+    <div class="mb-3 text-center" Style="margin-top: 10%;">
+        <img src="{{url_for('static',filename='images/editar.png')}}" alt="Editar" width="200px" height="200px">
+    </div>
+
+    <div class="mb-3">
         <label for="id_field" class="form-label" Style="font-size:15px">Cedula del usuario</label>
         <input type="text" class="form-control" placeholder="Digite la cedula del empleado a editar (sin espacios)" id="id_field" name="cedula">
     </div>

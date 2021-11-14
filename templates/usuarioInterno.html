@@ -20,7 +20,7 @@
 <br><br><br>    
 <div class="col"></div>
 
-    <form action="/empleado" class="row d-flex justify-content-center" method="POST" id="form_usuario_interno" enctype="multipart/form-data">
+    <form action="/empleado" class="row d-flex justify-content-center" Style="margin-top:5%" method="POST" id="form_usuario_interno" enctype="multipart/form-data">
         <div class="col-1"></div>
         <div class="col-4 ">
             <div class="imagen d-flex justify-content-center">
@@ -44,8 +44,8 @@
             <label for="id_field" class="form-label">Ciudad</label>
             <input type="text" class="form-control" value={{ciudad}} id="id_field" name="city">
             <br>
-            <button type="submit" class="btn btn-primary" id="btn_info">Guardar cambios</button>
-            <a href="/eliminar_cuenta"><button type="button" class="btn btn-primary" id="btn-actualizar">Eliminar cuenta</button></a>
+            <button type="submit" class="btn btn-primary" Style="padding: 10px; margin-left: 15%; width:25%;" id="btn_info"><b>Guardar cambios</b></button>
+            <a href="/eliminar_cuenta"><button type="button" class="btn btn-primary" Style="padding: 8px; margin-left: 10%; width:25%;" id="btn-actualizar"><b>Eliminar cuenta</b></button></a>
         </div>
 
         <div class="col-1 align-items-right">
@@ -73,16 +73,16 @@
             <label for="id_frase" class="form-label">Frase de Seguridad</label>
             <input type="password" class="form-control" placeholder="Digite su nueva Frase de seguridad" id="id_frase" name="phrase">
             <br>
-            <button type="submit" class="btn btn-primary" id="btn_frase">Guardar cambios</button>
+            <button type="submit" class="btn btn-primary" Style="padding: 10px; margin-left: 80%; width:20%;" id="btn_frase"><b>Guardar cambios</b></button>
             <br>
             <br>
             <label for="id_cambiar" class="form-label">Nueva Contraseña</label>
             <input type="password" class="form-control" placeholder="Digite su nueva contraseña" id="id_cambiar" name="new_pass">
             <br>
             <label for="id_cambiar" class="form-label">Confirmar Contraseña</label>
-            <input type="password" class="form-control" placeholder="Confirmar contraseña (Escriba para cambiar)" id="id_cambiar" name="check_pass">
+            <input type="password" class="form-control" id="id_cambiar" name="check_pass">
             <br>
-            <button type="submit" class="btn btn-primary" id="btn_pass">Guardar cambios</button> 
+            <button type="submit" class="btn btn-primary" Style="padding: 10px; margin-left: 80%; width:20%;" id="btn_pass"><b>Guardar cambios</b></button> 
 
         </div>
 
