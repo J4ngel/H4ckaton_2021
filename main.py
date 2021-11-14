@@ -455,7 +455,7 @@ def eliminar_producto(produc):
 
 #--------------------Yessid---------------------
 
-@app.route('/productos/nuevo', methods=['GET','POST'])
+@app.route('/login/dashboard/productos/nuevo', methods=['GET','POST'])
 def nuevoP():
     if request.method == 'POST':
 
